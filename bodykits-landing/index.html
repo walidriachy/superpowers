@@ -532,6 +532,138 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:4.5rem
 /* ── MEGA FOOTER NOTE STYLES ── */
 .mega-foot-note{font-family:var(--ff-o);font-size:.52rem;letter-spacing:.15em;color:var(--gray-600)}
 .mf-n{color:rgba(204,0,0,.8)}
+
+/* ── LERP SCROLL — kill native smooth ── */
+html{scroll-behavior:auto!important}
+
+/* ── RPM SCROLL GAUGE ── */
+#rpm-g{
+  position:fixed;bottom:calc(2rem + 72px);right:2rem;z-index:9994;
+  width:76px;opacity:0;pointer-events:none;
+  transition:opacity .5s ease;
+}
+#rpm-g.vis{opacity:1}
+#rpm-pct{display:block;font-family:var(--ff-o);font-size:.46rem;letter-spacing:.16em;color:rgba(204,0,0,.65);text-align:center;margin-top:.15rem}
+
+/* ── TERMINAL STOCK TICKER ── */
+.ticker-outer{
+  overflow:hidden;background:rgba(3,3,3,.98);
+  border-top:1px solid rgba(255,255,255,.04);
+  border-bottom:1px solid rgba(255,255,255,.04);
+  padding:.65rem 0;position:relative;
+}
+.ticker-outer::before,.ticker-outer::after{
+  content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none;
+}
+.ticker-outer::before{left:0;background:linear-gradient(to right,rgba(3,3,3,1),transparent)}
+.ticker-outer::after{right:0;background:linear-gradient(to left,rgba(3,3,3,1),transparent)}
+.ticker-inner{display:flex;width:max-content;animation:tickScroll 48s linear infinite;will-change:transform}
+.ticker-inner:hover{animation-play-state:paused}
+@keyframes tickScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tk-item{display:inline-flex;align-items:center;gap:.65rem;padding:0 2rem;
+  font-family:var(--ff-o);font-size:.54rem;letter-spacing:.12em;white-space:nowrap}
+.tk-name{color:rgba(255,255,255,.75)}
+.tk-in{color:#3cdc64}
+.tk-low{color:#e8c400}
+.tk-px{color:rgba(204,0,0,.85)}
+.tk-dot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.18);flex-shrink:0}
+
+/* ── BEFORE/AFTER TRANSFORMATION SLIDER ── */
+.ba-sec{
+  background:var(--darker);padding:7rem var(--sx);
+  position:relative;overflow:hidden;
+}
+.ba-sec::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(204,0,0,.04),transparent);
+}
+.ba-eye{font-family:var(--ff-a);font-size:.68rem;letter-spacing:.4em;text-transform:uppercase;color:var(--red);margin-bottom:.9rem;display:flex;align-items:center;gap:.8rem}
+.ba-eye::before{content:'';display:block;width:24px;height:1px;background:var(--red);flex-shrink:0}
+.ba-ttl{font-family:var(--ff-d);font-size:clamp(2.2rem,4.5vw,4.5rem);line-height:.88;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.7rem}
+.ba-sub{font-family:var(--ff-a);font-size:.8rem;letter-spacing:.1em;color:var(--gray-400);margin-bottom:3.5rem}
+.ba-wrap{
+  position:relative;width:100%;aspect-ratio:840/320;max-width:860px;margin:0 auto;
+  cursor:ew-resize;user-select:none;touch-action:none;
+  --pct:50%;
+}
+.ba-before,.ba-after{position:absolute;inset:0;overflow:hidden}
+.ba-before{z-index:2;clip-path:polygon(0 0,var(--pct) 0,var(--pct) 100%,0 100%)}
+.ba-after{z-index:1}
+.ba-before svg,.ba-after svg{width:100%;height:100%;display:block}
+.ba-handle{
+  position:absolute;top:0;bottom:0;left:var(--pct);z-index:3;
+  width:2px;background:rgba(255,255,255,.75);transform:translateX(-1px);
+  box-shadow:0 0 16px rgba(255,255,255,.35),0 0 4px #fff;pointer-events:none;
+}
+.ba-knob{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(8,8,8,.95);border:2px solid rgba(255,255,255,.65);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 24px rgba(0,0,0,.8),0 0 12px rgba(204,0,0,.18);
+}
+.ba-knob svg{stroke:rgba(255,255,255,.75);fill:none}
+.ba-lbl{position:absolute;top:1rem;z-index:4;
+  font-family:var(--ff-a);font-size:.56rem;letter-spacing:.28em;text-transform:uppercase;
+  padding:.28rem .75rem;border:1px solid;pointer-events:none;backdrop-filter:blur(6px)}
+.ba-lbl-l{left:1rem;color:rgba(180,180,180,.75);border-color:rgba(180,180,180,.2);background:rgba(0,0,0,.7)}
+.ba-lbl-r{right:1rem;color:rgba(204,0,0,.9);border-color:rgba(204,0,0,.35);background:rgba(0,0,0,.7)}
+.ba-hint{text-align:center;font-family:var(--ff-a);font-size:.58rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gray-600);margin-top:1.5rem}
+
+/* ── SOUND TOGGLE BUTTON ── */
+#snd-btn{
+  width:32px;height:32px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.12);background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:border-color .25s,background .25s;
+  margin-left:.6rem;flex-shrink:0;
+}
+#snd-btn:hover{border-color:rgba(204,0,0,.5);background:rgba(204,0,0,.06)}
+#snd-btn svg{width:14px;height:14px;stroke:rgba(255,255,255,.45);fill:none;
+  transition:stroke .25s;stroke-linecap:round;stroke-linejoin:round}
+#snd-btn.on{border-color:rgba(204,0,0,.5);background:rgba(204,0,0,.08)}
+#snd-btn.on svg{stroke:rgba(204,0,0,.9)}
+.snd-muted line{display:none}
+
+/* ── DELIVERY ESTIMATOR ── */
+.deliver-wrap{
+  display:inline-flex;align-items:center;gap:.9rem;
+  flex-wrap:wrap;justify-content:center;margin-top:2.2rem;
+}
+.deliver-sel{
+  font-family:var(--ff-a);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  color:#fff;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.15);
+  padding:.58rem 2.4rem .58rem 1rem;cursor:pointer;outline:none;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,.4)' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .85rem center;
+  transition:border-color .25s;
+}
+.deliver-sel:focus,.deliver-sel:hover{border-color:rgba(204,0,0,.5)}
+.deliver-res{
+  font-family:var(--ff-o);font-size:.6rem;letter-spacing:.18em;
+  color:transparent;border:1px solid transparent;padding:.4rem 1rem;
+  transition:color .4s,border-color .4s,background .4s;
+}
+.deliver-res.show{color:rgba(60,220,100,.9);border-color:rgba(60,220,100,.22);background:rgba(60,220,100,.05)}
+
+/* ── FULL-SCREEN CURTAIN TRANSITION ── */
+#curtain{
+  position:fixed;inset:0;z-index:10004;
+  background:var(--red);pointer-events:none;
+  transform:scaleY(0);transform-origin:top;
+  transition:transform .44s var(--ease-expo);
+}
+#curtain.in{transform:scaleY(1);pointer-events:all}
+#curtain.out{transform-origin:bottom;transform:scaleY(0)}
+
+/* ── AED / USD DUAL PRICE ── */
+.p-usd{
+  display:block;font-family:var(--ff-a);font-size:.58rem;
+  letter-spacing:.1em;color:rgba(255,255,255,.3);margin-top:.2rem;
+}
 </style>
 </head>
 <body>
@@ -583,7 +715,31 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:4.5rem
     <li><a href="#about">Story</a></li>
   </ul>
   <a href="https://www.bodykits.ae/collections" class="nav-cta">Shop Now</a>
+  <button id="snd-btn" aria-label="Toggle ambient sound" title="Ambient engine sound">
+    <svg id="snd-icon" viewBox="0 0 24 24" stroke-width="1.8">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M15.54 8.46a5 5 0 010 7.07"/>
+      <path d="M19.07 4.93a10 10 0 010 14.14"/>
+    </svg>
+  </button>
 </nav>
+
+<!-- PAGE CURTAIN -->
+<div id="curtain"></div>
+
+<!-- RPM SCROLL GAUGE -->
+<div id="rpm-g" aria-hidden="true">
+  <svg viewBox="0 0 76 48" fill="none" width="76">
+    <path d="M6 44 A32 32 0 0 1 70 44" stroke="rgba(255,255,255,.06)" stroke-width="4" stroke-linecap="round"/>
+    <path id="rpm-arc" d="M6 44 A32 32 0 0 1 70 44" stroke="rgba(204,0,0,.8)" stroke-width="4" stroke-linecap="round" stroke-dasharray="101" stroke-dashoffset="101"/>
+    <line x1="38" y1="12" x2="38" y2="8" stroke="rgba(255,255,255,.18)" stroke-width="1.2"/>
+    <line x1="11" y1="31" x2="8"  y2="29" stroke="rgba(255,255,255,.18)" stroke-width="1.2"/>
+    <line x1="65" y1="31" x2="68" y2="29" stroke="rgba(255,255,255,.18)" stroke-width="1.2"/>
+    <line id="rpm-needle" x1="38" y1="44" x2="6" y2="44" stroke="rgba(255,255,255,.8)" stroke-width="1.6" stroke-linecap="round"/>
+    <circle cx="38" cy="44" r="3.8" fill="var(--black)" stroke="rgba(255,255,255,.22)" stroke-width="1.2"/>
+  </svg>
+  <span id="rpm-pct">0%</span>
+</div>
 
 <!-- ── CAR BRANDS MEGA ─────────────────────────────────────── -->
 <div class="mega" id="mega-car" aria-label="Shop by Car Brand">
@@ -791,6 +947,11 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:4.5rem
   <div class="marquee-row"><div class="mq-track rev" id="mq2"></div><div class="mq-track rev" id="mq2b"></div></div>
 </div>
 
+<!-- TERMINAL STOCK TICKER -->
+<div class="ticker-outer" aria-hidden="true">
+  <div class="ticker-inner" id="ticker-inner"></div>
+</div>
+
 <!-- PRODUCTS -->
 <div id="products-outer" class="products-outer" id="products">
   <div class="products-sticky">
@@ -930,6 +1091,70 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:4.5rem
   </div>
 </div>
 
+<!-- BEFORE / AFTER TRANSFORMATION -->
+<section class="ba-sec" id="transform">
+  <p class="ba-eye">See The Difference</p>
+  <h2 class="ba-ttl">STOCK VS<br><span style="color:var(--red)">KITTED.</span></h2>
+  <p class="ba-sub">Drag the handle to reveal the transformation</p>
+  <div class="ba-wrap" id="ba-wrap">
+    <!-- BEFORE: stock car -->
+    <div class="ba-before" id="ba-before">
+      <svg viewBox="0 0 840 320" fill="none">
+        <path d="M75 255 L125 188 L225 130 L375 112 L495 112 L635 130 L715 188 L755 255 L715 272 L125 272 Z" stroke="rgba(160,160,160,.45)" stroke-width="1.5" fill="rgba(255,255,255,.015)"/>
+        <path d="M225 130 L295 158 L375 163 L375 112Z" fill="rgba(100,100,100,.07)" stroke="rgba(160,160,160,.25)" stroke-width=".8"/>
+        <path d="M495 112 L495 163 L565 158 L635 130Z" fill="rgba(100,100,100,.07)" stroke="rgba(160,160,160,.25)" stroke-width=".8"/>
+        <circle cx="215" cy="272" r="50" stroke="rgba(150,150,150,.4)" stroke-width="1.8"/>
+        <circle cx="215" cy="272" r="33" stroke="rgba(150,150,150,.18)" stroke-width="1"/>
+        <circle cx="625" cy="272" r="50" stroke="rgba(150,150,150,.4)" stroke-width="1.8"/>
+        <circle cx="625" cy="272" r="33" stroke="rgba(150,150,150,.18)" stroke-width="1"/>
+        <ellipse cx="420" cy="310" rx="330" ry="5" fill="rgba(255,255,255,.04)"/>
+        <text x="420" y="60" font-family="var(--ff-a)" font-size="9" letter-spacing="4" fill="rgba(140,140,140,.35)" text-anchor="middle">STANDARD CONFIGURATION</text>
+      </svg>
+    </div>
+    <!-- AFTER: kitted car -->
+    <div class="ba-after" id="ba-after">
+      <svg viewBox="0 0 840 320" fill="none">
+        <path d="M75 255 L125 188 L225 130 L375 112 L495 112 L635 130 L715 188 L755 255 L715 272 L125 272 Z" stroke="rgba(204,0,0,.7)" stroke-width="1.5" fill="rgba(204,0,0,.025)"/>
+        <path d="M225 130 L295 158 L375 163 L375 112Z" fill="rgba(204,0,0,.055)" stroke="rgba(204,0,0,.3)" stroke-width=".8"/>
+        <path d="M495 112 L495 163 L565 158 L635 130Z" fill="rgba(204,0,0,.055)" stroke="rgba(204,0,0,.3)" stroke-width=".8"/>
+        <!-- front splitter -->
+        <path d="M75 255 L38 255 L52 272 L125 272" stroke="rgba(204,0,0,.75)" stroke-width="1.8" fill="rgba(204,0,0,.08)"/>
+        <!-- rear diffuser -->
+        <path d="M755 255 L792 255 L778 272 L715 272" stroke="rgba(204,0,0,.75)" stroke-width="1.8" fill="rgba(204,0,0,.08)"/>
+        <!-- side skirts -->
+        <rect x="173" y="267" width="494" height="5" rx="1" fill="rgba(204,0,0,.28)" stroke="rgba(204,0,0,.55)" stroke-width=".8"/>
+        <!-- rear wing -->
+        <path d="M650 112 L695 78 L755 78" stroke="rgba(204,0,0,.65)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="695" y1="78" x2="695" y2="112" stroke="rgba(204,0,0,.4)" stroke-width="1.4"/>
+        <!-- wide arch front -->
+        <path d="M165 272 Q165 235 215 235 Q265 235 265 272" stroke="rgba(204,0,0,.45)" stroke-width="1.5" fill="rgba(204,0,0,.04)"/>
+        <!-- wide arch rear -->
+        <path d="M575 272 Q575 235 625 235 Q675 235 675 272" stroke="rgba(204,0,0,.45)" stroke-width="1.5" fill="rgba(204,0,0,.04)"/>
+        <!-- hood scoop -->
+        <path d="M385 114 L418 84 L452 84 L485 114" stroke="rgba(204,0,0,.4)" stroke-width="1.2" fill="rgba(204,0,0,.04)"/>
+        <!-- wheels kitted -->
+        <circle cx="215" cy="272" r="50" stroke="rgba(204,0,0,.8)" stroke-width="1.8"/>
+        <circle cx="215" cy="272" r="33" stroke="rgba(204,0,0,.3)" stroke-width="1"/>
+        <circle cx="215" cy="272" r="10" fill="rgba(204,0,0,.35)"/>
+        <circle cx="625" cy="272" r="50" stroke="rgba(204,0,0,.8)" stroke-width="1.8"/>
+        <circle cx="625" cy="272" r="33" stroke="rgba(204,0,0,.3)" stroke-width="1"/>
+        <circle cx="625" cy="272" r="10" fill="rgba(204,0,0,.35)"/>
+        <ellipse cx="420" cy="310" rx="330" ry="5" fill="rgba(204,0,0,.07)"/>
+        <text x="420" y="60" font-family="var(--ff-a)" font-size="9" letter-spacing="4" fill="rgba(204,0,0,.4)" text-anchor="middle">FULL AERO PACKAGE</text>
+      </svg>
+    </div>
+    <!-- drag handle -->
+    <div class="ba-handle" id="ba-handle">
+      <div class="ba-knob">
+        <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M9 18l-6-6 6-6M15 6l6 6-6 6"/></svg>
+      </div>
+    </div>
+    <span class="ba-lbl ba-lbl-l">Stock</span>
+    <span class="ba-lbl ba-lbl-r">Kitted</span>
+  </div>
+  <p class="ba-hint">← Drag to compare →</p>
+</section>
+
 <!-- METRICS -->
 <section class="metrics" id="metrics">
   <div class="metrics-inner">
@@ -1025,6 +1250,21 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:4.5rem
       <span>Shop The Collection</span>
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
+    <div class="deliver-wrap">
+      <select class="deliver-sel" id="deliver-sel" aria-label="Estimate delivery to your emirate">
+        <option value="">Estimate delivery time...</option>
+        <option value="dubai">Dubai</option>
+        <option value="abudhabi">Abu Dhabi</option>
+        <option value="sharjah">Sharjah</option>
+        <option value="ajman">Ajman</option>
+        <option value="fujairah">Fujairah</option>
+        <option value="ras">Ras Al Khaimah</option>
+        <option value="umm">Umm Al Quwain</option>
+        <option value="ksa">Saudi Arabia</option>
+        <option value="international">International</option>
+      </select>
+      <div class="deliver-res" id="deliver-out"></div>
+    </div>
   </div>
 </section>
 
@@ -1777,6 +2017,48 @@ window.addEventListener('scroll',()=>{
 },{passive:true});
 
 /* ============================================================
+   LERP SMOOTH SCROLL
+============================================================ */
+(function(){
+  if('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+  let target = scrollY, current = scrollY, raf = null;
+  const ease = 0.095;
+  function maxSY(){ return document.documentElement.scrollHeight - innerHeight; }
+  function clamp(v){ return Math.max(0, Math.min(maxSY(), v)); }
+
+  window.addEventListener('wheel', e=>{
+    e.preventDefault();
+    target = clamp(target + e.deltaY * 0.72);
+    if(!raf) raf = requestAnimationFrame(tick);
+  },{passive:false});
+
+  function tick(){
+    current += (target - current) * ease;
+    window.scrollTo(0, current);
+    if(Math.abs(target - current) > 0.18){ raf = requestAnimationFrame(tick); }
+    else{ current = target; window.scrollTo(0, target); raf = null; }
+  }
+
+  window.addEventListener('keydown', e=>{
+    const k = e.key, m = maxSY();
+    if(k==='ArrowDown') target = clamp(target + 80);
+    else if(k==='ArrowUp') target = clamp(target - 80);
+    else if(k==='PageDown') target = clamp(target + innerHeight * .88);
+    else if(k==='PageUp') target = clamp(target - innerHeight * .88);
+    else if(k===' ') target = clamp(target + innerHeight * .7);
+    else if(k==='Home') target = 0;
+    else if(k==='End') target = m;
+    else return;
+    e.preventDefault();
+    if(!raf) raf = requestAnimationFrame(tick);
+  });
+
+  // Expose sync for curtain transitions
+  window._lerpSync = ()=>{ target = current = Math.round(scrollY); };
+  window.addEventListener('hashchange', ()=>{ target = current = scrollY; });
+})();
+
+/* ============================================================
    SCROLL PROGRESS BAR
 ============================================================ */
 (function(){
@@ -1850,6 +2132,203 @@ window.addEventListener('scroll',()=>{
     }
     requestAnimationFrame(loop);
   })();
+})();
+
+/* ============================================================
+   RPM SCROLL GAUGE
+============================================================ */
+(function(){
+  const gauge  = document.getElementById('rpm-g');
+  const needle = document.getElementById('rpm-needle');
+  const arc    = document.getElementById('rpm-arc');
+  const pctEl  = document.getElementById('rpm-pct');
+  if(!gauge) return;
+  const ARC_LEN = 101;
+  let shown = false;
+  window.addEventListener('scroll',()=>{
+    const p = Math.min(1, scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight));
+    if(!shown && scrollY > 60){ shown = true; gauge.classList.add('vis'); }
+    const deg = p * 180 - 90;
+    if(needle) needle.setAttribute('transform',`rotate(${deg.toFixed(2)},38,44)`);
+    if(arc){ arc.style.strokeDashoffset = (ARC_LEN*(1-p)).toFixed(2); arc.style.stroke = p>.8?'#ff2020':'rgba(204,0,0,.85)'; }
+    if(pctEl) pctEl.textContent = Math.round(p*100)+'%';
+  },{passive:true});
+})();
+
+/* ============================================================
+   TERMINAL STOCK TICKER
+============================================================ */
+(function(){
+  const el = document.getElementById('ticker-inner');
+  if(!el) return;
+  const items = [
+    {n:'ZACOE WIDEBODY KIT',s:'IN STOCK',sc:'tk-in',p:'AED 4,200'},
+    {n:'DARWIN PRO CARBON LIP',s:'3 LEFT',sc:'tk-low',p:'AED 1,850'},
+    {n:'McLAREN 720S FULL KIT',s:'1 LEFT',sc:'tk-low',p:'AED 18,500'},
+    {n:'LAMBORGHINI URUS AERO',s:'IN STOCK',sc:'tk-in',p:'AED 12,900'},
+    {n:'BMW M4 F82 SIDE SKIRTS',s:'IN STOCK',sc:'tk-in',p:'AED 2,100'},
+    {n:'FERRARI 488 DIFFUSER SET',s:'IN STOCK',sc:'tk-in',p:'AED 6,800'},
+    {n:'PORSCHE 992 GT3 KIT',s:'2 LEFT',sc:'tk-low',p:'AED 9,200'},
+    {n:'NISSAN GTR R35 AERO',s:'IN STOCK',sc:'tk-in',p:'AED 5,400'},
+    {n:'CAMARO SS WIDEBODY',s:'IN STOCK',sc:'tk-in',p:'AED 3,600'},
+    {n:'TOYOTA SUPRA A90 KIT',s:'4 LEFT',sc:'tk-low',p:'AED 7,100'},
+    {n:'MERCEDES G63 BODY KIT',s:'IN STOCK',sc:'tk-in',p:'AED 8,400'},
+    {n:'AUDI RS7 CARBON LIP',s:'IN STOCK',sc:'tk-in',p:'AED 3,200'},
+  ];
+  const html = items.map(d=>
+    `<span class="tk-item"><span class="tk-name">${d.n}</span><span class="tk-dot"></span><span class="${d.sc}">${d.s}</span><span class="tk-dot"></span><span class="tk-px">${d.p}</span></span>`
+  ).join('');
+  el.innerHTML = html + html; // duplicate for seamless loop
+})();
+
+/* ============================================================
+   BEFORE / AFTER SLIDER
+============================================================ */
+(function(){
+  const wrap   = document.getElementById('ba-wrap');
+  if(!wrap) return;
+  let drag = false;
+
+  function setPct(clientX){
+    const r = wrap.getBoundingClientRect();
+    const p = Math.max(2, Math.min(98, ((clientX - r.left) / r.width) * 100));
+    wrap.style.setProperty('--pct', p + '%');
+  }
+
+  wrap.addEventListener('mousedown',  e=>{ drag=true; setPct(e.clientX); });
+  document.addEventListener('mousemove', e=>{ if(drag) setPct(e.clientX); });
+  document.addEventListener('mouseup',  ()=>{ drag=false; });
+  wrap.addEventListener('touchstart',  e=>{ drag=true; setPct(e.touches[0].clientX); e.preventDefault(); },{passive:false});
+  document.addEventListener('touchmove', e=>{ if(drag){ setPct(e.touches[0].clientX); e.preventDefault(); } },{passive:false});
+  document.addEventListener('touchend',  ()=>{ drag=false; });
+})();
+
+/* ============================================================
+   ENGINE AMBIENT SOUND TOGGLE
+============================================================ */
+(function(){
+  const btn = document.getElementById('snd-btn');
+  if(!btn) return;
+  let on=false, ac=null, osc=null, gainNode=null;
+
+  function boot(){
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if(!Ctx) return false;
+    ac = new Ctx();
+    gainNode = ac.createGain();
+    gainNode.gain.value = 0;
+
+    const filter = ac.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 220;
+    filter.Q.value = 0.9;
+
+    osc = ac.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.value = 57;
+
+    // Subtle idle wobble via LFO
+    const lfo = ac.createOscillator();
+    const lfoG = ac.createGain();
+    lfo.frequency.value = 5;
+    lfoG.gain.value = 2.5;
+    lfo.connect(lfoG); lfoG.connect(osc.frequency);
+    lfo.start();
+
+    osc.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(ac.destination);
+    osc.start();
+    return true;
+  }
+
+  btn.addEventListener('click',()=>{
+    if(!on){
+      if(!ac && !boot()) return;
+      if(ac.state==='suspended') ac.resume();
+      gainNode.gain.linearRampToValueAtTime(0.042, ac.currentTime + 0.35);
+      on=true; btn.classList.add('on');
+    } else {
+      gainNode.gain.linearRampToValueAtTime(0, ac.currentTime + 0.35);
+      on=false; btn.classList.remove('on');
+    }
+  });
+
+  // Rev up on CTA hover
+  document.querySelectorAll('.btn-red,.cta-btn').forEach(b=>{
+    b.addEventListener('mouseenter',()=>{ if(!on||!osc) return; osc.frequency.linearRampToValueAtTime(88, ac.currentTime+.08); gainNode.gain.linearRampToValueAtTime(.07, ac.currentTime+.08); });
+    b.addEventListener('mouseleave',()=>{ if(!on||!osc) return; osc.frequency.linearRampToValueAtTime(57, ac.currentTime+.28); gainNode.gain.linearRampToValueAtTime(.042, ac.currentTime+.28); });
+  });
+})();
+
+/* ============================================================
+   PAGE CURTAIN TRANSITIONS (anchor links)
+============================================================ */
+(function(){
+  const curtain = document.getElementById('curtain');
+  if(!curtain) return;
+  document.querySelectorAll('a[href^="#"]').forEach(link=>{
+    link.addEventListener('click',e=>{
+      const id = link.getAttribute('href');
+      if(!id || id==='#') return;
+      const target = document.querySelector(id);
+      if(!target) return;
+      e.preventDefault();
+      curtain.classList.remove('out');
+      curtain.classList.add('in');
+      setTimeout(()=>{
+        const y = target.getBoundingClientRect().top + scrollY;
+        window.scrollTo(0,y);
+        if(window._lerpSync) window._lerpSync();
+      }, 400);
+      setTimeout(()=>{
+        curtain.classList.remove('in');
+        curtain.classList.add('out');
+        setTimeout(()=>curtain.classList.remove('out'), 500);
+      }, 750);
+    });
+  });
+})();
+
+/* ============================================================
+   AED / USD DUAL PRICE
+============================================================ */
+(function(){
+  const rate = 0.272;
+  document.querySelectorAll('.p-price').forEach(el=>{
+    const n = parseInt((el.textContent||'').replace(/[^0-9]/g,''));
+    if(!n) return;
+    const usd = Math.round(n * rate);
+    const s = document.createElement('span');
+    s.className='p-usd';
+    s.textContent = `≈ $${usd.toLocaleString()} USD`;
+    el.appendChild(s);
+  });
+})();
+
+/* ============================================================
+   DELIVERY ESTIMATOR
+============================================================ */
+(function(){
+  const sel = document.getElementById('deliver-sel');
+  const out = document.getElementById('deliver-out');
+  if(!sel||!out) return;
+  const map = {
+    dubai:'📦 Next day · Same day available',
+    abudhabi:'📦 1–2 day delivery',
+    sharjah:'📦 Same day available',
+    ajman:'📦 1–2 day delivery',
+    fujairah:'📦 2–3 day delivery',
+    ras:'📦 2–3 day delivery',
+    umm:'📦 2–3 day delivery',
+    ksa:'📦 3–5 day delivery',
+    international:'📦 7–14 day delivery',
+  };
+  sel.addEventListener('change',()=>{
+    const v = sel.value;
+    out.textContent = map[v]||'';
+    out.classList.toggle('show', !!v);
+  });
 })();
 
 /* ============================================================
