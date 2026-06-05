@@ -1,0 +1,2367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BODYKITS.AE — Precision Automotive Styling | UAE</title>
+<meta name="description" content="UAE's premier destination for premium body kits, carbon fiber, and performance styling. Front bumpers, rear diffusers, wide body kits — all stocked in Dubai.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#040404;--dark:#0a0a0a;--darker:#0f0f0f;--carbon:#161616;
+  --red:#cc0000;--red-hi:#ff1a1a;--red-glow:rgba(204,0,0,.22);--red-dim:rgba(204,0,0,.08);
+  --white:#fff;--gray-200:#ccc;--gray-400:#888;--gray-600:#444;
+  --border:rgba(255,255,255,.055);--border-r:rgba(204,0,0,.18);
+  --ff-d:'Bebas Neue',sans-serif;--ff-b:'Inter',sans-serif;
+  --ff-a:'Rajdhani',sans-serif;--ff-o:'Orbitron',monospace;
+  --ease-expo:cubic-bezier(.16,1,.3,1);--ease-circ:cubic-bezier(.85,0,.15,1);
+  --ease-back:cubic-bezier(.34,1.56,.64,1);
+  --sx:clamp(1.5rem,5vw,6rem);--sy:clamp(4rem,9vw,9rem);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;scroll-behavior:smooth}
+body{
+  background:var(--black);color:var(--white);
+  font-family:var(--ff-b);overflow-x:hidden;
+  cursor:none;-webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+img{display:block;width:100%}
+::selection{background:var(--red);color:#fff}
+
+/* ── GRAIN ── */
+body::after{
+  content:'';position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:.028;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── CURSOR ── */
+#c-dot{position:fixed;top:0;left:0;width:7px;height:7px;background:var(--red);border-radius:50%;pointer-events:none;z-index:10001;transform:translate(-50%,-50%);transition:width .2s,height .2s,opacity .2s}
+#c-ring{position:fixed;top:0;left:0;width:36px;height:36px;border:1px solid rgba(204,0,0,.4);border-radius:50%;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);transition:width .35s var(--ease-expo),height .35s var(--ease-expo),border-color .3s}
+#c-label{position:fixed;top:0;left:0;pointer-events:none;z-index:10002;font-family:var(--ff-a);font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--white);transform:translate(14px,-10px);opacity:0;transition:opacity .25s;white-space:nowrap}
+body.cursor-big #c-dot{width:48px;height:48px;background:var(--red-dim);border:1px solid var(--red);border-radius:50%}
+body.cursor-big #c-ring{width:64px;height:64px;border-color:rgba(204,0,0,.55)}
+
+/* ── LOADER ── */
+#loader{position:fixed;inset:0;z-index:9999;pointer-events:none}
+#ld-top,#ld-bot{position:absolute;left:0;right:0;height:50%;background:var(--black);transition:transform .95s var(--ease-expo);z-index:1}
+#ld-top{top:0}#ld-bot{bottom:0}
+#ld-content{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem}
+.ld-wm{font-family:var(--ff-d);font-size:clamp(3rem,9vw,6rem);letter-spacing:.3em;overflow:hidden;display:flex}
+.ld-wm span{display:inline-block;transform:translateY(110%);transition:transform .7s var(--ease-expo)}
+.ld-wm span.in{transform:translateY(0)}
+.ld-track{width:min(340px,78vw);height:1px;background:rgba(255,255,255,.06);overflow:hidden}
+.ld-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--red-hi));width:0;transition:width .08s linear}
+.ld-pct{font-family:var(--ff-o);font-size:.72rem;letter-spacing:.4em;color:var(--gray-400)}
+#loader.out #ld-top{transform:translateY(-100%)}
+#loader.out #ld-bot{transform:translateY(100%)}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:1.6rem var(--sx);display:flex;align-items:center;justify-content:space-between;transition:padding .4s,background .4s,border-color .4s;border-bottom:1px solid transparent}
+nav.stuck{padding:1rem var(--sx);background:rgba(4,4,4,.92);backdrop-filter:blur(20px);border-color:rgba(204,0,0,.1)}
+.nav-logo{font-family:var(--ff-d);font-size:1.55rem;letter-spacing:.22em}
+.nav-logo em{color:var(--red);font-style:normal}
+.nav-links{display:flex;gap:2.4rem;list-style:none}
+.nav-links a{font-family:var(--ff-a);font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gray-400);position:relative;transition:color .3s}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--red);transition:width .35s var(--ease-expo)}
+.nav-links a:hover{color:#fff}
+.nav-links a:hover::after{width:100%}
+.nav-cta{font-family:var(--ff-a);font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:#fff;background:var(--red);padding:.55rem 1.4rem;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);transition:background .3s}
+.nav-cta:hover{background:var(--red-hi)}
+
+/* ── HERO ── */
+.hero{position:relative;height:100dvh;min-height:680px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;background:var(--black)}
+.hero-left{position:relative;z-index:3;display:flex;flex-direction:column;justify-content:center;padding:9rem var(--sx) 7rem}
+.hero-eye{font-family:var(--ff-a);font-size:.7rem;letter-spacing:.45em;text-transform:uppercase;color:var(--red);display:flex;align-items:center;gap:.9rem;margin-bottom:1.8rem;opacity:0;transform:translateY(14px)}
+.hero-eye::before{content:'';display:block;width:32px;height:1px;background:var(--red);flex-shrink:0}
+.hero-title{font-family:var(--ff-d);font-size:clamp(4.5rem,9.5vw,10rem);line-height:.87;letter-spacing:.01em;text-transform:uppercase;margin-bottom:2rem}
+.hero-title .ln{display:block;overflow:hidden}
+.hero-title .ln span{display:block;transform:translateY(108%)}
+.hero-title .accent{color:var(--red)}
+.hero-title .ghost{-webkit-text-stroke:1px rgba(255,255,255,.15);color:transparent}
+.hero-sub{font-size:.92rem;font-weight:300;line-height:1.78;color:var(--gray-400);max-width:340px;margin-bottom:2.8rem;opacity:0;transform:translateY(14px)}
+.hero-ctas{display:flex;gap:1rem;align-items:center;opacity:0;transform:translateY(14px)}
+.btn-red{position:relative;overflow:hidden;background:var(--red);color:#fff;padding:.95rem 2.4rem;font-family:var(--ff-a);font-size:.85rem;letter-spacing:.22em;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));transition:transform .3s;display:inline-block}
+.btn-red::before{content:'';position:absolute;inset:0;background:var(--red-hi);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease-expo)}
+.btn-red:hover::before{transform:scaleX(1)}
+.btn-red:hover{transform:translateY(-2px)}
+.btn-red span{position:relative;z-index:1}
+.btn-ghost{display:flex;align-items:center;gap:.7rem;font-family:var(--ff-a);font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gray-400);transition:color .3s}
+.btn-ghost .circ{width:40px;height:40px;border:1px solid var(--gray-600);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:border-color .3s,transform .35s var(--ease-expo)}
+.btn-ghost:hover{color:#fff}
+.btn-ghost:hover .circ{border-color:var(--red);transform:translateX(4px)}
+.hero-right{position:relative;overflow:hidden}
+.hero-right::before{content:'';position:absolute;inset:0;z-index:2;background:linear-gradient(to right,var(--black) 0%,transparent 28%);pointer-events:none}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-scroll{position:absolute;bottom:5.5rem;left:var(--sx);z-index:4;display:flex;align-items:flex-end;gap:.7rem;opacity:0}
+.scroll-line{width:1px;height:54px;background:linear-gradient(to bottom,transparent,var(--red));position:relative;overflow:hidden}
+.scroll-line::after{content:'';position:absolute;top:-54px;left:0;width:1px;height:54px;background:var(--red);animation:scrollPulse 1.9s ease infinite}
+@keyframes scrollPulse{to{top:58px}}
+.scroll-lbl{font-family:var(--ff-a);font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gray-600);writing-mode:vertical-rl}
+.hero-stats{position:absolute;bottom:0;left:0;right:0;z-index:4;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border);background:rgba(10,10,10,.88);backdrop-filter:blur(24px)}
+.stat-cell{padding:1.4rem 2rem;border-right:1px solid var(--border);opacity:0;transform:translateY(8px)}
+.stat-cell:last-child{border-right:none}
+.stat-num{font-family:var(--ff-o);font-size:1.9rem;font-weight:700;letter-spacing:.04em;color:var(--red)}
+.stat-num sup{font-size:.9rem;font-weight:400;color:rgba(204,0,0,.6)}
+.stat-lbl{font-family:var(--ff-a);font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gray-600);margin-top:.3rem}
+
+/* ── MARQUEE ── */
+.marquee-outer{background:var(--darker);overflow:hidden;border-top:1px solid rgba(204,0,0,.25);border-bottom:1px solid rgba(204,0,0,.25)}
+.marquee-row{display:flex;padding:.7rem 0;overflow:hidden}
+.marquee-row:first-child{border-bottom:1px solid rgba(255,255,255,.03)}
+.mq-track{display:flex;gap:0;white-space:nowrap;flex-shrink:0}
+.mq-track.fwd{animation:mqfwd 24s linear infinite}
+.mq-track.rev{animation:mqrev 20s linear infinite}
+@keyframes mqfwd{to{transform:translateX(-50%)}}
+@keyframes mqrev{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+.mq-item{display:inline-flex;align-items:center;gap:1rem;padding:0 2rem;font-family:var(--ff-d);font-size:.88rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gray-600)}
+.mq-pip{width:4px;height:4px;background:var(--red);border-radius:50%;flex-shrink:0}
+.mq-item.hi{color:rgba(204,0,0,.5)}
+
+/* ── SECTION UTIL ── */
+.sec{padding:var(--sy) var(--sx)}
+.s-eye{font-family:var(--ff-a);font-size:.7rem;letter-spacing:.42em;text-transform:uppercase;color:var(--red);display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem}
+.s-eye::before{content:'';display:block;width:26px;height:1px;background:var(--red);flex-shrink:0}
+.s-head{font-family:var(--ff-d);font-size:clamp(2.8rem,5.5vw,5.5rem);line-height:.91;letter-spacing:.015em;text-transform:uppercase}
+.s-head .ghost{-webkit-text-stroke:1px rgba(255,255,255,.14);color:transparent}
+.s-sub{font-size:.88rem;font-weight:300;color:var(--gray-400);line-height:1.82}
+.rv{opacity:0;transform:translateY(38px);transition:opacity .8s var(--ease-expo),transform .8s var(--ease-expo)}
+.rv.on{opacity:1;transform:none}
+.rv.d1{transition-delay:.12s}.rv.d2{transition-delay:.22s}.rv.d3{transition-delay:.34s}.rv.d4{transition-delay:.46s}
+.rv-clip{opacity:0;clip-path:polygon(0 0,0 0,0 100%,0 100%);transition:opacity .6s,clip-path .9s var(--ease-expo)}
+.rv-clip.on{opacity:1;clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+
+/* ── PRODUCTS (HORIZONTAL PIN) ── */
+.products-outer{height:300vh;position:relative}
+.products-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex}
+.products-sidebar{width:clamp(220px,20vw,300px);flex-shrink:0;background:var(--darker);border-right:1px solid var(--border);padding:4rem 2.5rem;display:flex;flex-direction:column;justify-content:space-between;position:relative;z-index:2}
+.ps-eye{font-family:var(--ff-a);font-size:.68rem;letter-spacing:.4em;text-transform:uppercase;color:var(--red);display:flex;align-items:center;gap:.7rem;margin-bottom:1.4rem}
+.ps-eye::before{content:'';display:block;width:20px;height:1px;background:var(--red)}
+.ps-head{font-family:var(--ff-d);font-size:clamp(2rem,4vw,3.2rem);line-height:.9;letter-spacing:.02em;text-transform:uppercase;margin-bottom:2rem}
+.ps-head .r{color:var(--red)}
+.ps-sub{font-size:.82rem;font-weight:300;color:var(--gray-400);line-height:1.75;margin-bottom:2.5rem}
+.ps-progress{display:flex;flex-direction:column;gap:.6rem}
+.ps-prog-label{font-family:var(--ff-a);font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gray-600);display:flex;justify-content:space-between}
+.ps-prog-track{height:1px;background:rgba(255,255,255,.06);position:relative;overflow:hidden}
+.ps-prog-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--red-hi));width:0%;transition:width .15s linear}
+.ps-drag{font-family:var(--ff-a);font-size:.65rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gray-600);display:flex;align-items:center;gap:.6rem}
+.ps-drag svg{stroke:var(--gray-600);animation:dragPulse 1.5s ease infinite}
+@keyframes dragPulse{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+.products-viewport{flex:1;overflow:hidden;position:relative}
+.products-track{display:flex;gap:2rem;padding:3.5rem 3.5rem 3.5rem;align-items:stretch;height:100%;will-change:transform}
+.p-card{flex:0 0 clamp(300px,36vw,480px);background:var(--darker);border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color .4s;transform-style:preserve-3d;display:flex;flex-direction:column}
+.p-card:hover{border-color:rgba(204,0,0,.4)}
+.p-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 55%,rgba(204,0,0,.12));opacity:0;pointer-events:none;transition:opacity .4s;z-index:0}
+.p-card:hover::after{opacity:1}
+.p-img{position:relative;overflow:hidden;background:linear-gradient(135deg,#180000,#111)}
+.p-card:nth-child(1) .p-img{aspect-ratio:16/9}
+.p-card:nth-child(2) .p-img{aspect-ratio:16/9}
+.p-card:nth-child(3) .p-img{aspect-ratio:16/9}
+.p-card:nth-child(4) .p-img{aspect-ratio:16/9}
+.p-img svg{width:80%;margin:auto;display:block;opacity:.5}
+.p-img-ov{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--darker))}
+.p-glow{position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);width:70%;height:60%;background:radial-gradient(ellipse,rgba(204,0,0,.4),transparent 70%);opacity:0;transition:opacity .4s}
+.p-card:hover .p-glow{opacity:1}
+.p-badge{position:absolute;top:1rem;left:1rem;z-index:2;background:var(--red);color:#fff;font-family:var(--ff-a);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;padding:.28rem .65rem;clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,0 100%)}
+.p-body{padding:1.4rem 1.6rem 1.6rem;position:relative;z-index:1;flex:1;display:flex;flex-direction:column}
+.p-cat{font-family:var(--ff-a);font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--red);margin-bottom:.4rem}
+.p-name{font-family:var(--ff-d);font-size:1.6rem;letter-spacing:.04em;text-transform:uppercase;line-height:1.05;margin-bottom:.55rem}
+.p-desc{font-size:.8rem;color:var(--gray-400);line-height:1.68;font-weight:300;flex:1;margin-bottom:1.4rem}
+.p-foot{display:flex;align-items:center;justify-content:space-between}
+.p-price{font-family:var(--ff-o);font-size:1.35rem;font-weight:700;color:var(--white)}
+.p-price .cur{font-family:var(--ff-a);font-size:.75rem;color:var(--gray-400);font-weight:400}
+.p-arrow{width:38px;height:38px;border:1px solid var(--gray-600);display:flex;align-items:center;justify-content:center;transition:background .3s,border-color .3s;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));flex-shrink:0}
+.p-card:hover .p-arrow{background:var(--red);border-color:var(--red)}
+/* mobile fallback */
+.products-mobile{display:none}
+
+/* ── METRICS ── */
+.metrics{background:var(--black);position:relative;overflow:hidden;padding:var(--sy) 0}
+.metrics::before{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:linear-gradient(to right,transparent,rgba(204,0,0,.2),transparent)}
+.metrics::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,transparent 1px,transparent 12px),repeating-linear-gradient(-45deg,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,transparent 1px,transparent 12px);pointer-events:none}
+.metrics-inner{position:relative;z-index:1}
+.metrics-label{text-align:center;margin-bottom:3rem}
+.metrics-label span{font-family:var(--ff-a);font-size:.68rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gray-600);border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:.5rem}
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.m-cell{padding:clamp(2rem,4vw,4rem) clamp(1.5rem,3vw,3rem);border-right:1px solid var(--border);text-align:center;position:relative}
+.m-cell:last-child{border-right:none}
+.m-cell::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:1px;height:0;background:var(--red);transition:height 1.2s var(--ease-expo)}
+.m-cell.on::before{height:40%}
+.m-num{font-family:var(--ff-o);font-size:clamp(3.5rem,7vw,7.5rem);font-weight:900;color:var(--red);line-height:1;letter-spacing:-.02em}
+.m-suffix{color:rgba(204,0,0,.45);font-size:clamp(2rem,4vw,4rem)}
+.m-lbl{font-family:var(--ff-a);font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gray-600);margin-top:.7rem}
+
+/* ── BENEFITS ── */
+.benefits{background:var(--dark);position:relative;overflow:hidden}
+.benefits::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--red),transparent)}
+.benefits::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.01) 0,rgba(255,255,255,.01) 1px,transparent 1px,transparent 14px),repeating-linear-gradient(-45deg,rgba(255,255,255,.01) 0,rgba(255,255,255,.01) 1px,transparent 1px,transparent 14px);pointer-events:none}
+.benefits-hdr{display:grid;grid-template-columns:1fr 1fr;align-items:end;gap:2rem;margin-bottom:4rem;position:relative;z-index:1}
+.benefits-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;position:relative;z-index:1}
+.b-card{padding:2.4rem 1.8rem;border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color .35s}
+.b-card:hover{border-color:rgba(204,0,0,.28)}
+.b-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--red),transparent);transform:scaleX(0);transform-origin:left;transition:transform .44s var(--ease-expo)}
+.b-card:hover::before{transform:scaleX(1)}
+.b-num{font-family:var(--ff-o);font-size:.62rem;letter-spacing:.3em;color:rgba(204,0,0,.45);margin-bottom:1.6rem}
+.b-icon{margin-bottom:1.4rem;height:48px}
+.b-icon svg{width:44px;height:44px;stroke:var(--red);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:300;stroke-dashoffset:300;transition:stroke-dashoffset 1.4s var(--ease-expo)}
+.b-card.on .b-icon svg{stroke-dashoffset:0}
+.b-title{font-family:var(--ff-d);font-size:1.3rem;letter-spacing:.04em;text-transform:uppercase;line-height:1.1;margin-bottom:.85rem}
+.b-text{font-size:.8rem;color:var(--gray-400);line-height:1.72;font-weight:300}
+
+/* ── ABOUT ── */
+.about{display:grid;grid-template-columns:1fr 1fr;min-height:660px;overflow:hidden}
+.about-vis{position:relative;background:linear-gradient(140deg,#1c0000 0%,#0a0a0a 100%);overflow:hidden}
+.about-vis-bg{position:absolute;inset:0;width:100%;height:100%;opacity:.18}
+.about-slash{position:absolute;top:0;right:-52px;width:104px;height:100%;background:var(--black);transform:skewX(-3.5deg);z-index:2}
+.about-year{position:absolute;bottom:3.5rem;left:3.5rem;z-index:3}
+.ay-num{font-family:var(--ff-o);font-size:clamp(3.5rem,6vw,5.5rem);font-weight:900;line-height:1;color:var(--red)}
+.ay-lbl{font-family:var(--ff-a);font-size:.65rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gray-400);margin-top:.3rem}
+.about-content{padding:5.5rem 5rem 5.5rem 7rem;display:flex;flex-direction:column;justify-content:center;background:var(--black)}
+.about-pull{font-family:var(--ff-d);font-size:clamp(1.9rem,3vw,2.8rem);line-height:1.1;letter-spacing:.03em;text-transform:uppercase;margin-bottom:2rem}
+.about-pull .r{color:var(--red)}
+.about-p{font-size:.88rem;font-weight:300;color:var(--gray-400);line-height:1.85;margin-bottom:1.1rem}
+.about-p strong{color:#fff;font-weight:500}
+.about-tags{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:2rem}
+.a-tag{font-family:var(--ff-a);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gray-400);border:1px solid rgba(255,255,255,.07);padding:.32rem .85rem;clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,0 100%);transition:border-color .3s,color .3s}
+.a-tag:hover{border-color:var(--red);color:#fff}
+
+/* ── CTA ── */
+.cta-sec{background:var(--darker);position:relative;overflow:hidden;text-align:center}
+.cta-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--ff-d);font-size:clamp(8rem,20vw,20rem);letter-spacing:.1em;-webkit-text-stroke:1px rgba(255,255,255,.022);color:transparent;white-space:nowrap;pointer-events:none;user-select:none}
+.cta-orb{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:400px;background:radial-gradient(ellipse,rgba(204,0,0,.065) 0%,transparent 70%);pointer-events:none}
+.cta-inner{position:relative;z-index:1}
+.cta-title{font-family:var(--ff-d);font-size:clamp(3.5rem,8vw,9rem);line-height:.88;letter-spacing:.012em;text-transform:uppercase;margin-bottom:1.6rem}
+.cta-title .r{color:var(--red)}
+.cta-sub{font-size:.92rem;font-weight:300;color:var(--gray-400);line-height:1.78;max-width:420px;margin:0 auto 2.8rem}
+.cta-btn{display:inline-flex;align-items:center;gap:.9rem;background:var(--red);color:#fff;padding:1.15rem 3rem;font-family:var(--ff-a);font-size:.9rem;letter-spacing:.26em;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));position:relative;overflow:hidden;transition:transform .3s}
+.cta-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--red),var(--red-hi));opacity:0;transition:opacity .3s}
+.cta-btn:hover::before{opacity:1}
+.cta-btn:hover{transform:translateY(-3px)}
+.cta-btn span,.cta-btn svg{position:relative;z-index:1}
+
+/* ── FOOTER ── */
+footer{background:var(--black);border-top:1px solid var(--border);padding:4.5rem var(--sx) 2.5rem}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3.5rem}
+.foot-logo{font-family:var(--ff-d);font-size:1.7rem;letter-spacing:.22em;margin-bottom:1.2rem}
+.foot-logo em{color:var(--red);font-style:normal}
+.foot-tag{font-size:.8rem;color:var(--gray-600);line-height:1.8;font-weight:300;max-width:250px}
+.foot-col h5{font-family:var(--ff-a);font-size:.65rem;letter-spacing:.34em;text-transform:uppercase;color:#fff;margin-bottom:1.3rem}
+.foot-col ul{list-style:none}
+.foot-col li{margin-bottom:.55rem}
+.foot-col a{font-size:.8rem;color:var(--gray-600);transition:color .3s}
+.foot-col a:hover{color:var(--red)}
+.foot-bottom{border-top:1px solid var(--border);padding-top:2rem;display:flex;align-items:center;justify-content:space-between}
+.foot-copy{font-family:var(--ff-a);font-size:.7rem;letter-spacing:.12em;color:var(--gray-600)}
+.foot-socials{display:flex;gap:.6rem}
+.soc{width:34px;height:34px;border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-family:var(--ff-a);font-size:.62rem;color:var(--gray-600);transition:border-color .3s,color .3s}
+.soc:hover{border-color:var(--red);color:var(--red)}
+
+/* ── GLITCH KEYFRAMES ── */
+@keyframes glitch-1{
+  0%,100%{clip-path:polygon(0 2%,100% 2%,100% 5%,0 5%);transform:translate(-3px,0)}
+  50%{clip-path:polygon(0 60%,100% 60%,100% 65%,0 65%);transform:translate(3px,0)}
+}
+@keyframes glitch-2{
+  0%,100%{clip-path:polygon(0 78%,100% 78%,100% 82%,0 82%);transform:translate(2px,0)}
+  50%{clip-path:polygon(0 35%,100% 35%,100% 40%,0 40%);transform:translate(-2px,0)}
+}
+.glitch-wrap{position:relative;display:inline-block}
+.glitch-wrap::before,.glitch-wrap::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;pointer-events:none;opacity:0}
+.glitch-wrap.glitching::before{opacity:.85;animation:glitch-1 .12s steps(1) 3;color:var(--red-hi)}
+.glitch-wrap.glitching::after{opacity:.85;animation:glitch-2 .12s steps(1) 3;color:rgba(0,180,255,.5)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1200px){
+  .benefits-grid{grid-template-columns:1fr 1fr}
+  .metrics-grid{grid-template-columns:1fr 1fr}
+  .m-cell{border-bottom:1px solid var(--border)}
+}
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr}
+  .hero-right{display:none}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .products-outer{height:auto}
+  .products-sticky{position:static;height:auto;flex-direction:column}
+  .products-sidebar{width:100%;border-right:none;border-bottom:1px solid var(--border);padding:3rem var(--sx)}
+  .products-viewport{overflow-x:auto;scrollbar-width:none}
+  .products-viewport::-webkit-scrollbar{display:none}
+  .products-track{transform:none!important;flex-wrap:nowrap;height:auto;overflow-x:auto;scroll-snap-type:x mandatory;padding:2rem var(--sx)}
+  .p-card{flex:0 0 80vw;scroll-snap-align:start}
+  .benefits-hdr{grid-template-columns:1fr}
+  .about{grid-template-columns:1fr}
+  .about-vis{min-height:260px}
+  .about-slash{display:none}
+  .about-content{padding:3.5rem var(--sx)}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .ps-drag{display:none}
+}
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .benefits-grid{grid-template-columns:1fr}
+  .metrics-grid{grid-template-columns:1fr 1fr}
+  .foot-grid{grid-template-columns:1fr}
+  .p-card{flex:0 0 88vw}
+}
+
+/* ── MEGA MENU ── */
+.nav-arr{font-size:.5rem;margin-left:.35rem;display:inline-block;transition:transform .28s var(--ease-expo);vertical-align:middle;color:var(--gray-600)}
+.mega-trigger:hover .nav-arr,.mega-trigger.open .nav-arr{transform:rotate(180deg);color:var(--red)}
+
+/* Container — clip-path downward wipe */
+.mega{
+  position:fixed;left:0;right:0;z-index:850;
+  background:rgba(6,6,6,.97);
+  border-bottom:1px solid rgba(204,0,0,.2);
+  opacity:0;visibility:hidden;pointer-events:none;
+  clip-path:inset(0 0 100% 0);
+  transition:clip-path .52s var(--ease-expo),opacity .12s,visibility .52s;
+  max-height:82vh;overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:thin;scrollbar-color:rgba(204,0,0,.4) transparent;
+}
+/* Carbon fibre texture */
+.mega::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    repeating-linear-gradient(45deg,rgba(255,255,255,.022) 0,rgba(255,255,255,.022) 1px,transparent 1px,transparent 10px),
+    repeating-linear-gradient(-45deg,rgba(255,255,255,.022) 0,rgba(255,255,255,.022) 1px,transparent 1px,transparent 10px);
+}
+/* Red scan-line sweeps once on open */
+.mega::after{
+  content:'';position:absolute;top:0;bottom:0;left:-30%;width:30%;
+  background:linear-gradient(90deg,transparent,rgba(204,0,0,.06),transparent);
+  pointer-events:none;z-index:8;
+}
+.mega.open{
+  opacity:1;visibility:visible;pointer-events:all;
+  clip-path:inset(0 0 -1px 0);
+}
+.mega.open::after{animation:megaScan .75s cubic-bezier(.4,0,.2,1) .06s 1 forwards}
+@keyframes megaScan{from{left:-30%}to{left:108%}}
+
+/* Body — spotlight glow follows cursor */
+.mega-body{position:relative;padding:2.5rem var(--sx) 3rem;z-index:1}
+.mega-body::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(440px circle at var(--mx,-999px) var(--my,-999px),rgba(204,0,0,.09),transparent 65%);
+}
+
+/* Header row */
+.mega-hd{
+  font-family:var(--ff-a);font-size:.62rem;letter-spacing:.44em;text-transform:uppercase;
+  color:var(--red);display:flex;align-items:center;gap:.8rem;
+  margin-bottom:1.5rem;position:relative;z-index:2;
+}
+.mega-hd::before{content:'';display:block;width:22px;height:1px;background:var(--red)}
+.mega-hd-r{margin-left:auto;color:var(--gray-600);font-size:.56rem;letter-spacing:.22em}
+
+/* Category filter tabs */
+.mega-tabs{display:flex;gap:.45rem;margin-bottom:1.6rem;flex-wrap:wrap;position:relative;z-index:2}
+.mt{
+  font-family:var(--ff-a);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.65);background:none;border:1px solid rgba(255,255,255,.24);
+  padding:.38rem .95rem;cursor:pointer;
+  transition:color .22s,border-color .22s,background .22s,box-shadow .22s;
+}
+.mt:hover{color:#fff;border-color:rgba(255,255,255,.48);background:rgba(255,255,255,.05)}
+.mt.active{
+  color:#fff;border-color:rgba(204,0,0,.9);background:rgba(204,0,0,.13);
+  box-shadow:0 0 18px rgba(204,0,0,.14) inset,0 0 0 1px rgba(204,0,0,.28);
+}
+.mt sup{font-size:.44rem;color:rgba(255,255,255,.38);margin-left:.3rem;vertical-align:super}
+.mt.active sup{color:rgba(204,0,0,.85)}
+
+/* Search bar */
+.mega-search{
+  display:flex;align-items:center;gap:.75rem;
+  border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);
+  padding:.5rem 1rem;max-width:360px;margin-bottom:1.8rem;
+  transition:border-color .25s;position:relative;z-index:2;
+}
+.mega-search:focus-within{border-color:rgba(204,0,0,.4)}
+.mega-search svg{stroke:var(--gray-600);flex-shrink:0;transition:stroke .25s}
+.mega-search:focus-within svg{stroke:rgba(204,0,0,.7)}
+.ms-in{
+  background:none;border:none;outline:none;
+  font-family:var(--ff-a);font-size:.7rem;letter-spacing:.12em;
+  color:#fff;width:100%;
+}
+.ms-in::placeholder{color:var(--gray-600)}
+.ms-count{font-family:var(--ff-o);font-size:.56rem;letter-spacing:.15em;color:var(--gray-600);white-space:nowrap;margin-left:auto}
+
+/* Brand grid */
+.brand-g{display:grid;grid-template-columns:repeat(6,1fr);gap:1rem;position:relative;z-index:2}
+
+/* Item entrance — starts hidden, stagger set by JS */
+.mega .bi{opacity:0;transform:translateY(10px) scale(0.95);transition:border-color .22s,background .22s}
+.bi.entering{animation:biEnter .42s var(--ease-expo) var(--bi-delay,0ms) both}
+@keyframes biEnter{from{opacity:0;transform:translateY(10px) scale(0.95)}to{opacity:1;transform:none}}
+
+/* Spotlight-focus: dim siblings when hovering */
+.mega.open .brand-g:hover .bi:not(:hover){
+  opacity:.3;transform:scale(0.965);filter:grayscale(10%);
+  transition:opacity .16s ease,transform .16s ease,filter .16s ease,border-color .22s,background .22s;
+}
+.mega.open .brand-g .bi:hover{
+  opacity:1;transform:scale(1.03);
+  transition:opacity .1s ease,transform .1s ease,border-color .22s,background .22s;
+}
+
+.bi{
+  display:flex;flex-direction:column;align-items:center;gap:.55rem;
+  padding:.7rem .35rem;border:1px solid transparent;
+  text-decoration:none;position:relative;cursor:pointer;
+}
+.bi:hover{border-color:rgba(204,0,0,.3);background:rgba(204,0,0,.04)}
+.bi:focus{outline:none;border-color:rgba(204,0,0,.6);background:rgba(204,0,0,.06)}
+.bi:focus .bi-lw{border-color:rgba(204,0,0,.7);box-shadow:0 0 14px rgba(204,0,0,.14)}
+.bi-lw{
+  width:70px;height:70px;border-radius:50%;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;transition:border-color .25s,box-shadow .25s;flex-shrink:0;
+}
+.bi:hover .bi-lw{border-color:rgba(204,0,0,.5);box-shadow:0 0 14px rgba(204,0,0,.1)}
+.bi-lw.rect{border-radius:5px;width:auto;min-width:72px;max-width:126px;height:50px;padding:0 .8rem}
+.bi-t{font-family:var(--ff-d);font-size:.88rem;letter-spacing:.06em;color:rgba(255,255,255,.7);text-align:center;line-height:1.2;padding:0 3px}
+.bi-t.sm{font-size:.72rem;letter-spacing:.04em}
+.bi-t.xs{font-size:.6rem;letter-spacing:.03em}
+.bi-nm{font-family:var(--ff-a);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400);text-align:center;transition:color .25s;line-height:1.3;max-width:86px}
+.bi:hover .bi-nm,.bi:focus .bi-nm{color:#fff}
+.bi-new{position:absolute;top:2px;right:2px;background:#d4b800;color:#000;font-family:var(--ff-a);font-size:.46rem;font-weight:700;letter-spacing:.1em;padding:.14rem .3rem;text-transform:uppercase;z-index:2}
+.bl-big{font-family:var(--ff-d);font-size:1rem;letter-spacing:.04em;color:#fff;text-align:center;white-space:nowrap}
+.bl-big.r{color:var(--red)}.bl-big.y{color:#d4b800}.bl-big.o{color:#e07000}
+
+/* Footer strip */
+.mega-foot{
+  margin-top:2.2rem;padding-top:1.6rem;
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;z-index:2;
+}
+.mega-view{
+  font-family:var(--ff-a);font-size:.65rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--gray-400);display:inline-flex;align-items:center;gap:.65rem;
+  text-decoration:none;transition:color .25s;
+}
+.mega-view:hover{color:var(--red)}
+.mega-view svg{transition:transform .3s var(--ease-expo)}
+.mega-view:hover svg{transform:translateX(5px)}
+.mega-res{font-family:var(--ff-o);font-size:.52rem;letter-spacing:.18em;color:var(--gray-600)}
+
+/* No results state */
+.mega-empty{
+  display:none;padding:3rem;text-align:center;
+  font-family:var(--ff-a);font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--gray-600);position:relative;z-index:2;
+}
+.mega-empty.show{display:block}
+
+@media(max-width:1200px){.brand-g{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:900px){.brand-g{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:768px){.mega{display:none}}
+
+/* ── @property animated gradient ── */
+@property --gp{syntax:'<percentage>';initial-value:0%;inherits:false}
+
+/* ── CUSTOM SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:var(--red);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:var(--red-hi)}
+
+/* ── SCROLL PROGRESS BAR ── */
+#spb{
+  position:fixed;top:0;left:0;width:0%;height:2px;z-index:10003;
+  background:linear-gradient(90deg,var(--red),var(--red-hi),rgba(255,100,100,.5));
+  pointer-events:none;
+  box-shadow:0 0 10px rgba(204,0,0,.75),0 0 22px rgba(204,0,0,.28);
+  transition:width .08s linear;
+}
+
+/* ── PARTICLE CLICK CANVAS ── */
+#pc{position:fixed;inset:0;pointer-events:none;z-index:9995}
+
+/* ── TOAST ── */
+#toast-wrap{position:fixed;bottom:1.8rem;left:1.8rem;z-index:9992;display:flex;flex-direction:column-reverse;gap:.7rem;pointer-events:none}
+.toast{
+  display:flex;align-items:center;gap:1rem;
+  background:rgba(7,7,7,.97);border:1px solid rgba(255,255,255,.06);
+  border-left:3px solid var(--red);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  padding:.95rem 1.3rem;max-width:310px;min-width:240px;
+  transform:translateX(-130%);opacity:0;
+  transition:transform .52s var(--ease-expo),opacity .3s;
+  pointer-events:none;
+}
+.toast.show{transform:translateX(0);opacity:1}
+.t-ico{font-size:1.3rem;flex-shrink:0;line-height:1}
+.t-body{flex:1;min-width:0}
+.t-name{font-family:var(--ff-a);font-size:.72rem;letter-spacing:.08em;color:#fff;margin-bottom:.18rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-loc{font-family:var(--ff-a);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gray-600)}
+.t-time{font-family:var(--ff-o);font-size:.48rem;letter-spacing:.1em;color:rgba(204,0,0,.6);flex-shrink:0;margin-left:.5rem}
+
+/* ── WHATSAPP CTA ── */
+#wa-btn{
+  position:fixed;bottom:2rem;right:2rem;z-index:9993;
+  width:56px;height:56px;border-radius:50%;
+  background:#25d366;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(37,211,102,.32);
+  transition:transform .38s var(--ease-expo),box-shadow .38s;
+}
+#wa-btn:hover{transform:translateY(-5px) scale(1.1);box-shadow:0 8px 32px rgba(37,211,102,.55)}
+#wa-btn svg{width:27px;height:27px;fill:#fff;position:relative;z-index:1}
+.wa-r{position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(37,211,102,.38);animation:waR 2.2s ease infinite}
+.wa-r2{position:absolute;inset:-18px;border-radius:50%;border:1px solid rgba(37,211,102,.18);animation:waR 2.2s ease .7s infinite}
+@keyframes waR{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.5);opacity:0}}
+
+/* ── IN-STOCK HERO BADGE ── */
+.stock-live{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-family:var(--ff-a);font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;
+  color:rgba(60,220,100,.9);margin-bottom:.9rem;
+  opacity:0;transform:translateY(8px);
+}
+.stock-live.in{opacity:1;transform:none;transition:opacity .8s ease,transform .8s ease}
+.sl-dot{width:7px;height:7px;border-radius:50%;background:#3cdc64;flex-shrink:0;position:relative}
+.sl-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(60,220,100,.45);animation:slP 1.9s ease infinite}
+@keyframes slP{0%{transform:scale(1);opacity:.75}100%{transform:scale(2.4);opacity:0}}
+
+/* ── MEGA FOOTER NOTE STYLES ── */
+.mega-foot-note{font-family:var(--ff-o);font-size:.52rem;letter-spacing:.15em;color:var(--gray-600)}
+.mf-n{color:rgba(204,0,0,.8)}
+
+/* ── LERP SCROLL — kill native smooth ── */
+html{scroll-behavior:auto!important}
+
+/* ── RPM SCROLL GAUGE ── */
+#rpm-g{
+  position:fixed;bottom:calc(2rem + 72px);right:2rem;z-index:9994;
+  width:76px;opacity:0;pointer-events:none;
+  transition:opacity .5s ease;
+}
+#rpm-g.vis{opacity:1}
+#rpm-pct{display:block;font-family:var(--ff-o);font-size:.46rem;letter-spacing:.16em;color:rgba(204,0,0,.65);text-align:center;margin-top:.15rem}
+
+/* ── TERMINAL STOCK TICKER ── */
+.ticker-outer{
+  overflow:hidden;background:rgba(3,3,3,.98);
+  border-top:1px solid rgba(255,255,255,.04);
+  border-bottom:1px solid rgba(255,255,255,.04);
+  padding:.65rem 0;position:relative;
+}
+.ticker-outer::before,.ticker-outer::after{
+  content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none;
+}
+.ticker-outer::before{left:0;background:linear-gradient(to right,rgba(3,3,3,1),transparent)}
+.ticker-outer::after{right:0;background:linear-gradient(to left,rgba(3,3,3,1),transparent)}
+.ticker-inner{display:flex;width:max-content;animation:tickScroll 48s linear infinite;will-change:transform}
+.ticker-inner:hover{animation-play-state:paused}
+@keyframes tickScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tk-item{display:inline-flex;align-items:center;gap:.65rem;padding:0 2rem;
+  font-family:var(--ff-o);font-size:.54rem;letter-spacing:.12em;white-space:nowrap}
+.tk-name{color:rgba(255,255,255,.75)}
+.tk-in{color:#3cdc64}
+.tk-low{color:#e8c400}
+.tk-px{color:rgba(204,0,0,.85)}
+.tk-dot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.18);flex-shrink:0}
+
+/* ── BEFORE/AFTER TRANSFORMATION SLIDER ── */
+.ba-sec{
+  background:var(--darker);padding:7rem var(--sx);
+  position:relative;overflow:hidden;
+}
+.ba-sec::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(204,0,0,.04),transparent);
+}
+.ba-eye{font-family:var(--ff-a);font-size:.68rem;letter-spacing:.4em;text-transform:uppercase;color:var(--red);margin-bottom:.9rem;display:flex;align-items:center;gap:.8rem}
+.ba-eye::before{content:'';display:block;width:24px;height:1px;background:var(--red);flex-shrink:0}
+.ba-ttl{font-family:var(--ff-d);font-size:clamp(2.2rem,4.5vw,4.5rem);line-height:.88;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.7rem}
+.ba-sub{font-family:var(--ff-a);font-size:.8rem;letter-spacing:.1em;color:var(--gray-400);margin-bottom:3.5rem}
+.ba-wrap{
+  position:relative;width:100%;aspect-ratio:840/320;max-width:860px;margin:0 auto;
+  cursor:ew-resize;user-select:none;touch-action:none;
+  --pct:50%;
+}
+.ba-before,.ba-after{position:absolute;inset:0;overflow:hidden}
+.ba-before{z-index:2;clip-path:polygon(0 0,var(--pct) 0,var(--pct) 100%,0 100%)}
+.ba-after{z-index:1}
+.ba-before svg,.ba-after svg{width:100%;height:100%;display:block}
+.ba-handle{
+  position:absolute;top:0;bottom:0;left:var(--pct);z-index:3;
+  width:2px;background:rgba(255,255,255,.75);transform:translateX(-1px);
+  box-shadow:0 0 16px rgba(255,255,255,.35),0 0 4px #fff;pointer-events:none;
+}
+.ba-knob{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(8,8,8,.95);border:2px solid rgba(255,255,255,.65);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 24px rgba(0,0,0,.8),0 0 12px rgba(204,0,0,.18);
+}
+.ba-knob svg{stroke:rgba(255,255,255,.75);fill:none}
+.ba-lbl{position:absolute;top:1rem;z-index:4;
+  font-family:var(--ff-a);font-size:.56rem;letter-spacing:.28em;text-transform:uppercase;
+  padding:.28rem .75rem;border:1px solid;pointer-events:none;backdrop-filter:blur(6px)}
+.ba-lbl-l{left:1rem;color:rgba(180,180,180,.75);border-color:rgba(180,180,180,.2);background:rgba(0,0,0,.7)}
+.ba-lbl-r{right:1rem;color:rgba(204,0,0,.9);border-color:rgba(204,0,0,.35);background:rgba(0,0,0,.7)}
+.ba-hint{text-align:center;font-family:var(--ff-a);font-size:.58rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gray-600);margin-top:1.5rem}
+
+/* ── SOUND TOGGLE BUTTON ── */
+#snd-btn{
+  width:32px;height:32px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.12);background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:border-color .25s,background .25s;
+  margin-left:.6rem;flex-shrink:0;
+}
+#snd-btn:hover{border-color:rgba(204,0,0,.5);background:rgba(204,0,0,.06)}
+#snd-btn svg{width:14px;height:14px;stroke:rgba(255,255,255,.45);fill:none;
+  transition:stroke .25s;stroke-linecap:round;stroke-linejoin:round}
+#snd-btn.on{border-color:rgba(204,0,0,.5);background:rgba(204,0,0,.08)}
+#snd-btn.on svg{stroke:rgba(204,0,0,.9)}
+.snd-muted line{display:none}
+
+/* ── DELIVERY ESTIMATOR ── */
+.deliver-wrap{
+  display:inline-flex;align-items:center;gap:.9rem;
+  flex-wrap:wrap;justify-content:center;margin-top:2.2rem;
+}
+.deliver-sel{
+  font-family:var(--ff-a);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  color:#fff;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.15);
+  padding:.58rem 2.4rem .58rem 1rem;cursor:pointer;outline:none;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,.4)' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .85rem center;
+  transition:border-color .25s;
+}
+.deliver-sel:focus,.deliver-sel:hover{border-color:rgba(204,0,0,.5)}
+.deliver-res{
+  font-family:var(--ff-o);font-size:.6rem;letter-spacing:.18em;
+  color:transparent;border:1px solid transparent;padding:.4rem 1rem;
+  transition:color .4s,border-color .4s,background .4s;
+}
+.deliver-res.show{color:rgba(60,220,100,.9);border-color:rgba(60,220,100,.22);background:rgba(60,220,100,.05)}
+
+/* ── FULL-SCREEN CURTAIN TRANSITION ── */
+#curtain{
+  position:fixed;inset:0;z-index:10004;
+  background:var(--red);pointer-events:none;
+  transform:scaleY(0);transform-origin:top;
+  transition:transform .44s var(--ease-expo);
+}
+#curtain.in{transform:scaleY(1);pointer-events:all}
+#curtain.out{transform-origin:bottom;transform:scaleY(0)}
+
+/* ── AED / USD DUAL PRICE ── */
+.p-usd{
+  display:block;font-family:var(--ff-a);font-size:.58rem;
+  letter-spacing:.1em;color:rgba(255,255,255,.3);margin-top:.2rem;
+}
+</style>
+</head>
+<body>
+
+<!-- SCROLL PROGRESS BAR -->
+<div id="spb"></div>
+
+<!-- CLICK PARTICLE CANVAS -->
+<canvas id="pc"></canvas>
+
+<!-- TOAST NOTIFICATIONS -->
+<div id="toast-wrap"></div>
+
+<!-- WHATSAPP FLOATING CTA -->
+<a href="https://wa.me/97100000000" id="wa-btn" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <span class="wa-r"></span>
+  <span class="wa-r2"></span>
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"/></svg>
+</a>
+
+<!-- CURSOR -->
+<div id="c-dot"></div>
+<div id="c-ring"></div>
+<div id="c-label"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div id="ld-top"></div>
+  <div id="ld-bot"></div>
+  <div id="ld-content">
+    <div class="ld-wm">
+      <span id="lw0">B</span><span id="lw1">O</span><span id="lw2">D</span><span id="lw3">Y</span>
+      <span id="lw4" style="color:var(--red)">K</span><span id="lw5" style="color:var(--red)">I</span><span id="lw6" style="color:var(--red)">T</span><span id="lw7" style="color:var(--red)">S</span>
+      <span id="lw8" style="color:var(--gray-600)">.</span><span id="lw9" style="color:var(--gray-600)">A</span><span id="lw10" style="color:var(--gray-600)">E</span>
+    </div>
+    <div class="ld-track"><div class="ld-fill" id="ld-fill"></div></div>
+    <div class="ld-pct" id="ld-pct">000</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="https://www.bodykits.ae" class="nav-logo">BODY<em>KITS</em>.AE</a>
+  <ul class="nav-links">
+    <li><a href="https://www.bodykits.ae/collections">All Catalogue</a></li>
+    <li class="mega-trigger" id="trig-car"><a href="#" data-mega="mega-car" onclick="return false">Car Brands <span class="nav-arr">▾</span></a></li>
+    <li class="mega-trigger" id="trig-aftermarket"><a href="#" data-mega="mega-aftermarket" onclick="return false">Brands <span class="nav-arr">▾</span></a></li>
+    <li><a href="#benefits">Why Us</a></li>
+    <li><a href="#about">Story</a></li>
+  </ul>
+  <a href="https://www.bodykits.ae/collections" class="nav-cta">Shop Now</a>
+  <button id="snd-btn" aria-label="Toggle ambient sound" title="Ambient engine sound">
+    <svg id="snd-icon" viewBox="0 0 24 24" stroke-width="1.8">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M15.54 8.46a5 5 0 010 7.07"/>
+      <path d="M19.07 4.93a10 10 0 010 14.14"/>
+    </svg>
+  </button>
+</nav>
+
+<!-- PAGE CURTAIN -->
+<div id="curtain"></div>
+
+<!-- RPM SCROLL GAUGE -->
+<div id="rpm-g" aria-hidden="true">
+  <svg viewBox="0 0 76 48" fill="none" width="76">
+    <path d="M6 44 A32 32 0 0 1 70 44" stroke="rgba(255,255,255,.06)" stroke-width="4" stroke-linecap="round"/>
+    <path id="rpm-arc" d="M6 44 A32 32 0 0 1 70 44" stroke="rgba(204,0,0,.8)" stroke-width="4" stroke-linecap="round" stroke-dasharray="101" stroke-dashoffset="101"/>
+    <line x1="38" y1="12" x2="38" y2="8" stroke="rgba(255,255,255,.18)" stroke-width="1.2"/>
+    <line x1="11" y1="31" x2="8"  y2="29" stroke="rgba(255,255,255,.18)" stroke-width="1.2"/>
+    <line x1="65" y1="31" x2="68" y2="29" stroke="rgba(255,255,255,.18)" stroke-width="1.2"/>
+    <line id="rpm-needle" x1="38" y1="44" x2="6" y2="44" stroke="rgba(255,255,255,.8)" stroke-width="1.6" stroke-linecap="round"/>
+    <circle cx="38" cy="44" r="3.8" fill="var(--black)" stroke="rgba(255,255,255,.22)" stroke-width="1.2"/>
+  </svg>
+  <span id="rpm-pct">0%</span>
+</div>
+
+<!-- ── CAR BRANDS MEGA ─────────────────────────────────────── -->
+<div class="mega" id="mega-car" aria-label="Shop by Car Brand">
+  <div class="mega-body">
+  <div class="mega-hd">Shop by Car Brand <span class="mega-hd-r" id="car-hd-count">28 Brands</span></div>
+  <div class="mega-tabs">
+    <button class="mt active" data-filter="all">All<sup>28</sup></button>
+    <button class="mt" data-filter="luxury">Luxury<sup>8</sup></button>
+    <button class="mt" data-filter="euro">European<sup>8</sup></button>
+    <button class="mt" data-filter="jdm">JDM<sup>6</sup></button>
+    <button class="mt" data-filter="us">American<sup>6</sup></button>
+  </div>
+  <div class="mega-search">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input type="text" placeholder="Search car brands..." class="ms-in" id="search-car" autocomplete="off">
+    <span class="ms-count" id="count-car">28 Brands</span>
+  </div>
+  <div class="mega-empty" id="empty-car">No brands match your search</div>
+  <div class="brand-g" id="car-grid">
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="luxury" tabindex="0"><div class="bi-lw"><span class="bi-t sm" style="color:#ff6600;font-style:italic">McLAREN</span></div><span class="bi-nm">McLaren</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="luxury" tabindex="0"><div class="bi-lw" style="background:rgba(200,160,0,.07);border-color:rgba(200,160,0,.14)"><span class="bi-t" style="color:#e8c000">L</span></div><span class="bi-nm">Lamborghini</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="luxury" tabindex="0"><div class="bi-lw"><span class="bi-t sm" style="color:#b0a080">PORSCHE</span></div><span class="bi-nm">Porsche</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="luxury" tabindex="0"><div class="bi-lw" style="background:rgba(180,0,8,.07);border-color:rgba(180,0,8,.15)"><span class="bi-t" style="color:#cc0014;font-style:italic">F</span></div><span class="bi-nm">Ferrari</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="us" tabindex="0"><div class="bi-lw"><svg viewBox="0 0 46 14" fill="none" width="42"><line x1="8" y1="7" x2="38" y2="7" stroke="rgba(204,0,0,.5)" stroke-width="1.5"/><path d="M17 2 L29 2 L29 12 L17 12 Z" fill="none" stroke="rgba(204,0,0,.6)" stroke-width="1.2"/><text x="23" y="10.5" font-family="Arial Black" font-size="7" font-weight="900" fill="rgba(204,0,0,.8)" text-anchor="middle">T</text></svg></div><span class="bi-nm">Tesla</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="luxury" tabindex="0"><div class="bi-lw" style="background:rgba(140,123,94,.06)"><span class="bi-t sm" style="color:#b09a6a;font-family:'Times New Roman',serif;font-style:italic;letter-spacing:.12em">RR</span></div><span class="bi-nm">Rolls Royce</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="luxury" tabindex="0"><div class="bi-lw" style="background:rgba(120,100,40,.07)"><span class="bi-t" style="color:#b09050">B</span></div><span class="bi-nm">Bentley</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="luxury" tabindex="0"><div class="bi-lw" style="background:rgba(0,80,50,.07);border-color:rgba(0,80,50,.14)"><span class="bi-t sm" style="color:#006644">AM</span></div><span class="bi-nm">Aston Martin</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="luxury" tabindex="0"><div class="bi-lw" style="background:rgba(28,64,160,.07);border-color:rgba(28,64,160,.14)"><span class="bi-t sm" style="color:#6090e0">MASER<br>ATI</span></div><span class="bi-nm">Maserati</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="euro" tabindex="0"><div class="bi-lw"><span class="bi-t sm" style="color:#a0a090;letter-spacing:.1em">JAG</span></div><span class="bi-nm">Jaguar</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="us" tabindex="0"><div class="bi-lw" style="background:rgba(180,0,0,.07)"><span class="bi-t xs" style="color:#cc2200;letter-spacing:.08em">VETTE</span></div><span class="bi-nm">Corvette</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="euro" tabindex="0"><div class="bi-lw" style="background:rgba(180,0,0,.06)"><span class="bi-t sm" style="color:#cc0000">ALFA</span></div><span class="bi-nm">Alfa Romeo</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="us" tabindex="0"><div class="bi-lw"><span class="bi-t xs" style="color:#9a8a6a;letter-spacing:.1em">CAD</span></div><span class="bi-nm">Cadillac</span></a>
+    <!-- BMW — quadrant SVG -->
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="euro" tabindex="0">
+      <div class="bi-lw">
+        <svg viewBox="0 0 46 46" fill="none" width="50" height="50">
+          <circle cx="23" cy="23" r="21.5" stroke="rgba(255,255,255,.55)" stroke-width="1.4"/>
+          <circle cx="23" cy="23" r="14.5" stroke="rgba(255,255,255,.45)" stroke-width="1"/>
+          <line x1="23" y1="1.5" x2="23" y2="44.5" stroke="rgba(255,255,255,.45)" stroke-width="1"/>
+          <line x1="1.5" y1="23" x2="44.5" y2="23" stroke="rgba(255,255,255,.45)" stroke-width="1"/>
+          <path d="M23 8.5 A14.5 14.5 0 0 1 37.5 23" fill="#1565C0"/>
+          <path d="M23 37.5 A14.5 14.5 0 0 1 8.5 23" fill="#1565C0"/>
+        </svg>
+      </div>
+      <span class="bi-nm">BMW</span>
+    </a>
+    <!-- Mercedes — three-pointed star -->
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="euro" tabindex="0">
+      <div class="bi-lw">
+        <svg viewBox="0 0 46 46" fill="none" width="50" height="50">
+          <circle cx="23" cy="23" r="21.5" stroke="rgba(255,255,255,.5)" stroke-width="1.4"/>
+          <path d="M23 5 L23 23" stroke="rgba(255,255,255,.75)" stroke-width="1.9" stroke-linecap="round"/>
+          <path d="M23 23 L5.5 35" stroke="rgba(255,255,255,.75)" stroke-width="1.9" stroke-linecap="round"/>
+          <path d="M23 23 L40.5 35" stroke="rgba(255,255,255,.75)" stroke-width="1.9" stroke-linecap="round"/>
+          <circle cx="23" cy="23" r="2.8" fill="rgba(255,255,255,.22)"/>
+        </svg>
+      </div>
+      <span class="bi-nm">Mercedes</span>
+    </a>
+    <!-- VW -->
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="euro" tabindex="0">
+      <div class="bi-lw" style="background:rgba(30,96,144,.07);border-color:rgba(30,96,144,.14)">
+        <svg viewBox="0 0 46 46" fill="none" width="50" height="50">
+          <circle cx="23" cy="23" r="21.5" stroke="rgba(30,120,190,.45)" stroke-width="1.4"/>
+          <text x="23" y="29" font-family="Arial Black" font-size="14" font-weight="900" fill="rgba(80,160,255,.8)" text-anchor="middle">VW</text>
+        </svg>
+      </div>
+      <span class="bi-nm">VolksWagen</span>
+    </a>
+    <!-- Audi — four rings -->
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="euro" tabindex="0">
+      <div class="bi-lw">
+        <svg viewBox="0 0 84 24" fill="none" width="58" height="auto">
+          <circle cx="12" cy="12" r="11" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/>
+          <circle cx="32" cy="12" r="11" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/>
+          <circle cx="52" cy="12" r="11" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/>
+          <circle cx="72" cy="12" r="11" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <span class="bi-nm">Audi</span>
+    </a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="us" tabindex="0"><div class="bi-lw" style="background:rgba(0,52,120,.07)"><span class="bi-t" style="color:#5090e0;font-style:italic">Ford</span></div><span class="bi-nm">Ford</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="us" tabindex="0"><div class="bi-lw" style="background:rgba(200,160,0,.06)"><span class="bi-t xs" style="color:#c8a000;letter-spacing:.05em">CAMARO</span></div><span class="bi-nm">Camaro</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="us" tabindex="0"><div class="bi-lw" style="background:rgba(180,0,0,.07)"><span class="bi-t sm" style="color:#cc2200">DODGE</span></div><span class="bi-nm">Dodge</span></a>
+    <!-- Toyota — triple oval -->
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="jdm" tabindex="0">
+      <div class="bi-lw" style="background:rgba(220,10,28,.06)">
+        <svg viewBox="0 0 52 32" fill="none" width="48">
+          <ellipse cx="26" cy="16" rx="25" ry="12" stroke="rgba(200,40,40,.55)" stroke-width="1.4"/>
+          <ellipse cx="18" cy="16" rx="13" ry="10" stroke="rgba(200,40,40,.6)" stroke-width="1.2"/>
+          <ellipse cx="26" cy="10" rx="15" ry="8" stroke="rgba(200,40,40,.5)" stroke-width="1" fill="rgba(200,0,0,.04)"/>
+        </svg>
+      </div>
+      <span class="bi-nm">Toyota</span>
+    </a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="jdm" tabindex="0"><div class="bi-lw" style="background:rgba(204,0,0,.07)"><span class="bi-t sm" style="color:#cc0000;letter-spacing:.1em">GT-R</span></div><span class="bi-nm">Nissan</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="jdm" tabindex="0"><div class="bi-lw" style="background:rgba(0,53,135,.07)"><span class="bi-t sm" style="color:#4080d0">SUBARU</span></div><span class="bi-nm">Subaru</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi bi-new-parent" data-cat="jdm" tabindex="0"><div class="bi-lw"><span class="bi-t sm" style="color:#7090c0">SCION</span></div><span class="bi-nm">Scion</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="euro" tabindex="0"><div class="bi-lw"><span class="bi-t sm" style="color:#aaa;text-transform:lowercase;font-size:.82rem">smart</span></div><span class="bi-nm">Smart</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="euro" tabindex="0"><div class="bi-lw" style="background:rgba(180,160,0,.06)"><span class="bi-t sm" style="color:#b0a000">LOTUS</span></div><span class="bi-nm">Lotus</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="jdm" tabindex="0"><div class="bi-lw" style="background:rgba(204,0,0,.06)"><span class="bi-t" style="color:#cc0000">H</span></div><span class="bi-nm">Honda</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" data-cat="jdm" tabindex="0"><div class="bi-lw"><span class="bi-t" style="color:#a0a0a0;font-style:italic">L</span></div><span class="bi-nm">Lexus</span><span class="bi-new">NEW</span></a>
+  </div>
+  <div class="mega-foot">
+    <a href="https://www.bodykits.ae/collections" class="mega-view">Browse all makes <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="13" height="13"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <span class="mega-foot-note"><span class="mf-n">28</span> Makes · Free UAE shipping over AED 300</span>
+  </div>
+  </div>
+</div>
+
+<!-- ── AFTERMARKET BRANDS MEGA ────────────────────────────── -->
+<div class="mega" id="mega-aftermarket" aria-label="Shop by Brand">
+  <div class="mega-body">
+  <div class="mega-hd">Shop by Brand <span class="mega-hd-r" id="am-hd-count">36 Brands</span></div>
+  <div class="mega-search">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input type="text" placeholder="Search brands..." class="ms-in" id="search-aftermarket" autocomplete="off">
+    <span class="ms-count" id="count-aftermarket">36 Brands</span>
+  </div>
+  <div class="mega-empty" id="empty-aftermarket">No brands match your search</div>
+  <div class="brand-g" id="aftermarket-grid">
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.88rem;letter-spacing:.1em">ZACOE</span></div><span class="bi-nm">Zacoe</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect" style="min-width:88px"><span class="bl-big" style="font-size:.76rem;line-height:1.15"><span class="r">DARWIN</span> PRO</span></div><span class="bi-nm">DarwinPro</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-family:var(--ff-b);font-weight:700;font-size:.95rem;text-transform:lowercase;letter-spacing:.02em">adro</span></div><span class="bi-nm">Adro</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.82rem;line-height:1.1">SEIBON<br><span style="color:var(--gray-600);font-size:.7em;font-family:var(--ff-a);letter-spacing:.12em">CARBON</span></span></div><span class="bi-nm">Seibon Carbon</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect" style="min-width:110px"><span class="bl-big" style="font-size:.6rem;line-height:1.3">ANDERSON<br>COMPOSITES</span></div><span class="bi-nm">Anderson Composites</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.9rem;letter-spacing:.06em">VICREZ</span></div><span class="bi-nm">Vicrez</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.82rem"><span class="o">DIR</span>SPEED</span></div><span class="bi-nm">Dirspeed</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect" style="min-width:105px"><span class="bl-big" style="font-size:.62rem;line-height:1.3"><span class="r">STREET HUNTER</span><br>USA</span></div><span class="bi-nm">Street Hunter USA</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-family:var(--ff-b);font-weight:800;font-size:.8rem;line-height:1.15">Fi<br>EXHAUST</span></div><span class="bi-nm">Fi Exhaust</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.72rem;letter-spacing:.06em">KARBONIUS</span></div><span class="bi-nm">Karbonious</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect" style="min-width:100px"><span class="bl-big" style="font-size:.62rem;line-height:1.25">STREET<span class="r">FIGHTER</span><br>LA</span></div><span class="bi-nm">Streetfighter LA</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.72rem;line-height:1.1">KEVTEC<br><span style="color:var(--gray-600);font-family:var(--ff-a);font-size:.7em;letter-spacing:.1em">CARBON</span></span></div><span class="bi-nm">KevTec</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.7rem">KEVMANNZ</span></div><span class="bi-nm">KevmannZ</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect" style="min-width:100px"><span class="bl-big" style="font-size:.68rem;font-family:var(--ff-b);font-style:italic"><i>i</i>MP<span style="color:var(--gray-600);font-weight:400;font-size:.85em">erformance</span></span></div><span class="bi-nm">iMPerformance</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-family:var(--ff-b);font-weight:800;font-size:.8rem;letter-spacing:.05em">RSI C6</span></div><span class="bi-nm">RSI C6</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-family:var(--ff-b);font-style:italic;font-weight:700;font-size:.9rem">Jarte</span></div><span class="bi-nm">Jarte</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect" style="min-width:105px"><span class="bl-big" style="font-size:.6rem;line-height:1.3;color:rgba(200,0,0,.9)">APR<br><span style="color:#fff">PERFORMANCE</span></span></div><span class="bi-nm">APR Performance</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-weight:900;font-family:var(--ff-b);letter-spacing:.08em">CMST</span></div><span class="bi-nm">CMST</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw" style="border-radius:6px;width:auto;padding:0 .8rem;height:50px;min-width:72px"><span class="bl-big" style="font-family:var(--ff-b);font-weight:800;font-size:.8rem">MAXTON<br><span style="color:var(--gray-600);font-size:.75em;font-weight:400">DESIGN</span></span></div><span class="bi-nm">Maxton Design</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.88rem"><span class="r">SPORT</span>LINE</span></div><span class="bi-nm">Sportline</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.75rem;letter-spacing:.06em">CARBONADO</span></div><span class="bi-nm">Carbonado</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-style:italic;font-size:.88rem">AKRA<span class="r">POVIC</span></span></div><span class="bi-nm">Akrapovic</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-family:var(--ff-b);font-weight:800;font-size:.82rem">MBRP</span></div><span class="bi-nm">MBRP</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw" style="background:rgba(220,180,0,.07)"><span class="bi-t" style="color:#d4b000;font-family:var(--ff-b);font-weight:900">MF</span></div><span class="bi-nm">MF</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.8rem;color:#e8c400">BILSTEIN</span></div><span class="bi-nm">Bilstein</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.88rem;letter-spacing:.06em">INJEN</span></div><span class="bi-nm">Injen</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-style:italic;font-family:var(--ff-b);font-weight:700;font-size:.9rem">Borla</span></div><span class="bi-nm">Borla</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.82rem;color:#cc2200">EIBACH</span></div><span class="bi-nm">Eibach</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.78rem;line-height:1.15"><span class="r">aFe</span><br>POWER</span></div><span class="bi-nm">aFe Power</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-style:italic;font-size:.88rem">INVIDIA</span></div><span class="bi-nm">Invidia</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-family:var(--ff-b);font-weight:900;font-size:.78rem;color:rgba(255,255,255,.55);letter-spacing:.06em">PERRIN</span></div><span class="bi-nm">Perrin</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.82rem">WILWOOD</span></div><span class="bi-nm">Wilwood</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-family:var(--ff-b);font-style:italic;font-weight:900;font-size:.95rem">FOX</span></div><span class="bi-nm">FOX</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-family:var(--ff-b);font-weight:900;font-size:.88rem;color:#cc2200">K&amp;N</span></div><span class="bi-nm">K&amp;N</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.82rem">PANDEM</span></div><span class="bi-nm">Pandem</span></a>
+    <a href="https://www.bodykits.ae/collections" class="bi" tabindex="0"><div class="bi-lw rect"><span class="bl-big" style="font-size:.75rem;letter-spacing:.14em;color:var(--gray-600)">+ MORE</span></div><span class="bi-nm">All Brands</span></a>
+  </div>
+  <div class="mega-foot">
+    <a href="https://www.bodykits.ae/collections" class="mega-view">Browse all brands <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="13" height="13"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <span class="mega-foot-note"><span class="mf-n">36</span> Brands · Free UAE shipping over AED 300</span>
+  </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-left">
+    <p class="hero-eye" id="h-eye">UAE's Premier Automotive Styling</p>
+    <div class="stock-live" id="h-stock"><span class="sl-dot"></span>500+ units in stock &mdash; Dubai warehouse</div>
+    <h1 class="hero-title" aria-label="Redefine Your Machine">
+      <span class="ln"><span id="hl1" class="glitch-wrap" data-text="REDEFINE">REDEFINE</span></span>
+      <span class="ln"><span id="hl2" class="ghost">YOUR</span></span>
+      <span class="ln"><span id="hl3" class="accent">MACHINE.</span></span>
+    </h1>
+    <p class="hero-sub" id="h-sub">Precision-engineered body kits for performance vehicles. Exact fitment. Premium materials. Delivered across the UAE.</p>
+    <div class="hero-ctas" id="h-ctas">
+      <a href="https://www.bodykits.ae/collections" class="btn-red"><span>Explore Collection</span></a>
+      <a href="#about" class="btn-ghost">
+        <span class="circ">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+        Our Story
+      </a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <canvas id="hero-canvas"></canvas>
+  </div>
+  <div class="hero-scroll" id="h-scroll">
+    <div class="scroll-line"></div>
+    <span class="scroll-lbl">Scroll to explore</span>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-cell" id="sc0"><div class="stat-num"><span class="cnt" data-t="500">0</span><sup>+</sup></div><div class="stat-lbl">Products In Stock</div></div>
+    <div class="stat-cell" id="sc1"><div class="stat-num"><span class="cnt" data-t="7">0</span><sup>+</sup></div><div class="stat-lbl">Years Experience</div></div>
+    <div class="stat-cell" id="sc2"><div class="stat-num"><span class="cnt" data-t="3000">0</span><sup>+</sup></div><div class="stat-lbl">Happy Clients</div></div>
+    <div class="stat-cell" id="sc3"><div class="stat-num"><span class="cnt" data-t="100">0</span><sup>%</sup></div><div class="stat-lbl">UAE Coverage</div></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-outer" aria-hidden="true">
+  <div class="marquee-row"><div class="mq-track fwd" id="mq1"></div><div class="mq-track fwd" id="mq1b"></div></div>
+  <div class="marquee-row"><div class="mq-track rev" id="mq2"></div><div class="mq-track rev" id="mq2b"></div></div>
+</div>
+
+<!-- TERMINAL STOCK TICKER -->
+<div class="ticker-outer" aria-hidden="true">
+  <div class="ticker-inner" id="ticker-inner"></div>
+</div>
+
+<!-- PRODUCTS -->
+<div id="products-outer" class="products-outer" id="products">
+  <div class="products-sticky">
+    <div class="products-sidebar">
+      <div>
+        <p class="ps-eye">Featured Collections</p>
+        <h2 class="ps-head">ENGINEERED<br>FOR <span class="r">DOMINANCE</span></h2>
+        <p class="ps-sub">Every kit is precision-manufactured to OEM tolerances. Zero cutting. Zero drilling. Perfect fitment — guaranteed.</p>
+        <div class="ps-drag">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Drag to explore
+        </div>
+      </div>
+      <div class="ps-progress">
+        <div class="ps-prog-label"><span>Progress</span><span id="ps-idx">01 / 04</span></div>
+        <div class="ps-prog-track"><div class="ps-prog-fill" id="ps-fill"></div></div>
+      </div>
+    </div>
+    <div class="products-viewport" id="products-viewport">
+      <div class="products-track" id="products-track">
+
+        <!-- Card 1 -->
+        <div class="p-card" id="products">
+          <div class="p-img">
+            <svg viewBox="0 0 820 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M60 270 L110 205 L210 148 L360 130 L480 130 L620 148 L700 205 L740 270 L700 292 L110 292 Z" stroke="rgba(204,0,0,.7)" stroke-width="1.5"/>
+              <path d="M210 148 L280 175 L360 180 L360 130Z" fill="rgba(204,0,0,.04)" stroke="rgba(255,255,255,.07)" stroke-width=".8"/>
+              <path d="M480 130 L480 180 L560 175 L620 148Z" fill="rgba(204,0,0,.04)" stroke="rgba(255,255,255,.07)" stroke-width=".8"/>
+              <circle cx="195" cy="290" r="44" stroke="rgba(204,0,0,.8)" stroke-width="1.8"/>
+              <circle cx="195" cy="290" r="30" stroke="rgba(255,255,255,.09)" stroke-width="1"/>
+              <circle cx="195" cy="290" r="10" fill="rgba(204,0,0,.5)"/>
+              <circle cx="615" cy="290" r="44" stroke="rgba(204,0,0,.8)" stroke-width="1.8"/>
+              <circle cx="615" cy="290" r="30" stroke="rgba(255,255,255,.09)" stroke-width="1"/>
+              <circle cx="615" cy="290" r="10" fill="rgba(204,0,0,.5)"/>
+              <path d="M700 205 L730 226 L740 255 L714 249 L698 224Z" fill="rgba(204,0,0,.2)" stroke="rgba(204,0,0,.8)" stroke-width="1"/>
+              <path d="M110 205 L80 226 L60 255 L86 249 L112 224Z" fill="rgba(204,0,0,.4)" stroke="rgba(204,0,0,1)" stroke-width="1"/>
+              <path d="M700 270 L755 270 L740 292 L700 292" stroke="rgba(204,0,0,.65)" stroke-width="1.5" fill="rgba(204,0,0,.06)"/>
+              <path d="M110 270 L60 270 L60 292 L110 292" stroke="rgba(204,0,0,.65)" stroke-width="1.5" fill="rgba(204,0,0,.06)"/>
+              <ellipse cx="405" cy="334" rx="340" ry="8" fill="rgba(204,0,0,.08)"/>
+            </svg>
+            <div class="p-img-ov"></div><div class="p-glow"></div>
+            <span class="p-badge">Best Seller</span>
+          </div>
+          <div class="p-body">
+            <p class="p-cat">Wide Body Kit</p>
+            <h3 class="p-name">GT Sport Full Kit</h3>
+            <p class="p-desc">Complete transformation in one box. Front bumper, rear diffuser, side skirts, and rear wing — precision-matched for 50+ vehicle models. Zero modifications required.</p>
+            <div class="p-foot">
+              <div class="p-price"><span class="cur">AED </span>4,200</div>
+              <a href="https://www.bodykits.ae/collections" class="p-arrow" aria-label="View"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="p-card">
+          <div class="p-img">
+            <svg viewBox="0 0 500 260" fill="none">
+              <path d="M20 180 L60 120 L160 75 L270 68 L360 75 L440 120 L480 180 L440 198 L60 198Z" stroke="rgba(204,0,0,.7)" stroke-width="1.5"/>
+              <circle cx="100" cy="196" r="36" stroke="rgba(204,0,0,.8)" stroke-width="1.8"/>
+              <circle cx="100" cy="196" r="24" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+              <circle cx="100" cy="196" r="8" fill="rgba(204,0,0,.5)"/>
+              <circle cx="400" cy="196" r="36" stroke="rgba(204,0,0,.8)" stroke-width="1.8"/>
+              <circle cx="400" cy="196" r="24" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+              <circle cx="400" cy="196" r="8" fill="rgba(204,0,0,.5)"/>
+              <path d="M440 120 L474 140 L480 165 L456 161 L438 138Z" fill="rgba(204,0,0,.2)" stroke="rgba(204,0,0,.8)" stroke-width="1"/>
+              <ellipse cx="250" cy="230" rx="220" ry="9" fill="rgba(204,0,0,.1)"/>
+            </svg>
+            <div class="p-img-ov"></div><div class="p-glow"></div>
+            <span class="p-badge">Carbon Fiber</span>
+          </div>
+          <div class="p-body">
+            <p class="p-cat">Front Bumper</p>
+            <h3 class="p-name">Aero Carbon Front</h3>
+            <p class="p-desc">Full carbon fiber construction with integrated front splitter. Wind-tunnel tested for enhanced downforce and optimised cooling flow at speed.</p>
+            <div class="p-foot">
+              <div class="p-price"><span class="cur">AED </span>1,850</div>
+              <a href="https://www.bodykits.ae/collections" class="p-arrow" aria-label="View"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="p-card">
+          <div class="p-img">
+            <svg viewBox="0 0 500 260" fill="none">
+              <rect x="20" y="80" width="460" height="80" stroke="rgba(204,0,0,.5)" stroke-width="1.2" fill="rgba(204,0,0,.03)"/>
+              <line x1="100" y1="80" x2="100" y2="160" stroke="rgba(204,0,0,.35)" stroke-width="1"/>
+              <line x1="200" y1="80" x2="200" y2="160" stroke="rgba(204,0,0,.35)" stroke-width="1"/>
+              <line x1="300" y1="80" x2="300" y2="160" stroke="rgba(204,0,0,.35)" stroke-width="1"/>
+              <line x1="400" y1="80" x2="400" y2="160" stroke="rgba(204,0,0,.35)" stroke-width="1"/>
+              <path d="M20 160 L20 188 L480 188 L480 160" stroke="rgba(204,0,0,.65)" stroke-width="1.5" fill="rgba(204,0,0,.05)"/>
+              <path d="M50 188 L28 208 L472 208 L450 188" stroke="rgba(204,0,0,.4)" stroke-width="1" fill="rgba(204,0,0,.03)"/>
+              <ellipse cx="250" cy="215" rx="220" ry="8" fill="rgba(204,0,0,.1)"/>
+            </svg>
+            <div class="p-img-ov"></div><div class="p-glow"></div>
+          </div>
+          <div class="p-body">
+            <p class="p-cat">Rear Diffuser</p>
+            <h3 class="p-name">Vortex Diffuser Pro</h3>
+            <p class="p-desc">Aggressive rear diffuser with dual exhaust cutouts. Premium ABS with optional carbon fiber overlay for a factory-perfect, track-ready finish.</p>
+            <div class="p-foot">
+              <div class="p-price"><span class="cur">AED </span>1,200</div>
+              <a href="https://www.bodykits.ae/collections" class="p-arrow" aria-label="View"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="p-card">
+          <div class="p-img">
+            <svg viewBox="0 0 500 260" fill="none">
+              <path d="M60 50 L440 50 L480 130 L480 180 L440 200 L60 200 L20 180 L20 130 Z" stroke="rgba(204,0,0,.55)" stroke-width="1.2" fill="rgba(204,0,0,.03)"/>
+              <line x1="60" y1="50" x2="20" y2="130" stroke="rgba(204,0,0,.4)" stroke-width="1"/>
+              <line x1="440" y1="50" x2="480" y2="130" stroke="rgba(204,0,0,.4)" stroke-width="1"/>
+              <line x1="20" y1="130" x2="480" y2="130" stroke="rgba(204,0,0,.25)" stroke-width=".8" stroke-dasharray="8,8"/>
+              <path d="M60 50 L80 20 L420 20 L440 50" stroke="rgba(204,0,0,.6)" stroke-width="1.4" fill="rgba(204,0,0,.06)"/>
+              <line x1="250" y1="20" x2="250" y2="50" stroke="rgba(204,0,0,.4)" stroke-width="1"/>
+              <ellipse cx="250" cy="210" rx="200" ry="8" fill="rgba(204,0,0,.1)"/>
+            </svg>
+            <div class="p-img-ov"></div><div class="p-glow"></div>
+            <span class="p-badge">New Arrival</span>
+          </div>
+          <div class="p-body">
+            <p class="p-cat">Side Skirts</p>
+            <h3 class="p-name">Blade Side Kit</h3>
+            <p class="p-desc">Low-profile blade skirts machined for perfect door alignment. Available in PP-flex and full dry carbon. Matched for 80+ models.</p>
+            <div class="p-foot">
+              <div class="p-price"><span class="cur">AED </span>960</div>
+              <a href="https://www.bodykits.ae/collections" class="p-arrow" aria-label="View"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BEFORE / AFTER TRANSFORMATION -->
+<section class="ba-sec" id="transform">
+  <p class="ba-eye">See The Difference</p>
+  <h2 class="ba-ttl">STOCK VS<br><span style="color:var(--red)">KITTED.</span></h2>
+  <p class="ba-sub">Drag the handle to reveal the transformation</p>
+  <div class="ba-wrap" id="ba-wrap">
+    <!-- BEFORE: stock car -->
+    <div class="ba-before" id="ba-before">
+      <svg viewBox="0 0 840 320" fill="none">
+        <path d="M75 255 L125 188 L225 130 L375 112 L495 112 L635 130 L715 188 L755 255 L715 272 L125 272 Z" stroke="rgba(160,160,160,.45)" stroke-width="1.5" fill="rgba(255,255,255,.015)"/>
+        <path d="M225 130 L295 158 L375 163 L375 112Z" fill="rgba(100,100,100,.07)" stroke="rgba(160,160,160,.25)" stroke-width=".8"/>
+        <path d="M495 112 L495 163 L565 158 L635 130Z" fill="rgba(100,100,100,.07)" stroke="rgba(160,160,160,.25)" stroke-width=".8"/>
+        <circle cx="215" cy="272" r="50" stroke="rgba(150,150,150,.4)" stroke-width="1.8"/>
+        <circle cx="215" cy="272" r="33" stroke="rgba(150,150,150,.18)" stroke-width="1"/>
+        <circle cx="625" cy="272" r="50" stroke="rgba(150,150,150,.4)" stroke-width="1.8"/>
+        <circle cx="625" cy="272" r="33" stroke="rgba(150,150,150,.18)" stroke-width="1"/>
+        <ellipse cx="420" cy="310" rx="330" ry="5" fill="rgba(255,255,255,.04)"/>
+        <text x="420" y="60" font-family="var(--ff-a)" font-size="9" letter-spacing="4" fill="rgba(140,140,140,.35)" text-anchor="middle">STANDARD CONFIGURATION</text>
+      </svg>
+    </div>
+    <!-- AFTER: kitted car -->
+    <div class="ba-after" id="ba-after">
+      <svg viewBox="0 0 840 320" fill="none">
+        <path d="M75 255 L125 188 L225 130 L375 112 L495 112 L635 130 L715 188 L755 255 L715 272 L125 272 Z" stroke="rgba(204,0,0,.7)" stroke-width="1.5" fill="rgba(204,0,0,.025)"/>
+        <path d="M225 130 L295 158 L375 163 L375 112Z" fill="rgba(204,0,0,.055)" stroke="rgba(204,0,0,.3)" stroke-width=".8"/>
+        <path d="M495 112 L495 163 L565 158 L635 130Z" fill="rgba(204,0,0,.055)" stroke="rgba(204,0,0,.3)" stroke-width=".8"/>
+        <!-- front splitter -->
+        <path d="M75 255 L38 255 L52 272 L125 272" stroke="rgba(204,0,0,.75)" stroke-width="1.8" fill="rgba(204,0,0,.08)"/>
+        <!-- rear diffuser -->
+        <path d="M755 255 L792 255 L778 272 L715 272" stroke="rgba(204,0,0,.75)" stroke-width="1.8" fill="rgba(204,0,0,.08)"/>
+        <!-- side skirts -->
+        <rect x="173" y="267" width="494" height="5" rx="1" fill="rgba(204,0,0,.28)" stroke="rgba(204,0,0,.55)" stroke-width=".8"/>
+        <!-- rear wing -->
+        <path d="M650 112 L695 78 L755 78" stroke="rgba(204,0,0,.65)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="695" y1="78" x2="695" y2="112" stroke="rgba(204,0,0,.4)" stroke-width="1.4"/>
+        <!-- wide arch front -->
+        <path d="M165 272 Q165 235 215 235 Q265 235 265 272" stroke="rgba(204,0,0,.45)" stroke-width="1.5" fill="rgba(204,0,0,.04)"/>
+        <!-- wide arch rear -->
+        <path d="M575 272 Q575 235 625 235 Q675 235 675 272" stroke="rgba(204,0,0,.45)" stroke-width="1.5" fill="rgba(204,0,0,.04)"/>
+        <!-- hood scoop -->
+        <path d="M385 114 L418 84 L452 84 L485 114" stroke="rgba(204,0,0,.4)" stroke-width="1.2" fill="rgba(204,0,0,.04)"/>
+        <!-- wheels kitted -->
+        <circle cx="215" cy="272" r="50" stroke="rgba(204,0,0,.8)" stroke-width="1.8"/>
+        <circle cx="215" cy="272" r="33" stroke="rgba(204,0,0,.3)" stroke-width="1"/>
+        <circle cx="215" cy="272" r="10" fill="rgba(204,0,0,.35)"/>
+        <circle cx="625" cy="272" r="50" stroke="rgba(204,0,0,.8)" stroke-width="1.8"/>
+        <circle cx="625" cy="272" r="33" stroke="rgba(204,0,0,.3)" stroke-width="1"/>
+        <circle cx="625" cy="272" r="10" fill="rgba(204,0,0,.35)"/>
+        <ellipse cx="420" cy="310" rx="330" ry="5" fill="rgba(204,0,0,.07)"/>
+        <text x="420" y="60" font-family="var(--ff-a)" font-size="9" letter-spacing="4" fill="rgba(204,0,0,.4)" text-anchor="middle">FULL AERO PACKAGE</text>
+      </svg>
+    </div>
+    <!-- drag handle -->
+    <div class="ba-handle" id="ba-handle">
+      <div class="ba-knob">
+        <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M9 18l-6-6 6-6M15 6l6 6-6 6"/></svg>
+      </div>
+    </div>
+    <span class="ba-lbl ba-lbl-l">Stock</span>
+    <span class="ba-lbl ba-lbl-r">Kitted</span>
+  </div>
+  <p class="ba-hint">← Drag to compare →</p>
+</section>
+
+<!-- METRICS -->
+<section class="metrics" id="metrics">
+  <div class="metrics-inner">
+    <div class="metrics-label rv"><span>Performance In Numbers</span></div>
+    <div class="metrics-grid">
+      <div class="m-cell rv"><div class="m-num"><span class="mcnt" data-t="500">0</span><span class="m-suffix">+</span></div><div class="m-lbl">Products In Stock</div></div>
+      <div class="m-cell rv d1"><div class="m-num"><span class="mcnt" data-t="7">0</span><span class="m-suffix">+</span></div><div class="m-lbl">Years In Business</div></div>
+      <div class="m-cell rv d2"><div class="m-num"><span class="mcnt" data-t="3000">0</span><span class="m-suffix">+</span></div><div class="m-lbl">Builds Completed</div></div>
+      <div class="m-cell rv d3"><div class="m-num"><span class="mcnt" data-t="100">0</span><span class="m-suffix">%</span></div><div class="m-lbl">UAE Coverage</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="sec benefits" id="benefits">
+  <div class="benefits-hdr">
+    <div>
+      <p class="s-eye rv">Why Choose Us</p>
+      <h2 class="s-head rv d1">PRECISION<br><span class="ghost">UNMATCHED</span></h2>
+    </div>
+    <p class="s-sub rv d2" style="max-width:340px">We don't stock parts — we curate transformations. Every product is personally vetted against OEM specifications before it reaches your vehicle.</p>
+  </div>
+  <div class="benefits-grid">
+    <div class="b-card rv">
+      <div class="b-num">01</div>
+      <div class="b-icon"><svg viewBox="0 0 48 48"><path d="M24 4L44 14v16c0 10-8 16-20 20C12 46 4 40 4 30V14z"/><polyline points="14 24 21 31 34 18"/></svg></div>
+      <h3 class="b-title">Guaranteed Fitment</h3>
+      <p class="b-text">Every kit is engineered to OEM tolerances. Zero cutting. Zero drilling. Your kit fits perfectly or we replace it — no questions asked.</p>
+    </div>
+    <div class="b-card rv d1">
+      <div class="b-num">02</div>
+      <div class="b-icon"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="18"/><polyline points="24 12 24 24 32 32"/></svg></div>
+      <h3 class="b-title">48hr UAE Delivery</h3>
+      <p class="b-text">Dubai, Abu Dhabi, Sharjah — nationwide delivery within 48 hours. White-glove packaging ensures your kit arrives in showroom condition.</p>
+    </div>
+    <div class="b-card rv d2">
+      <div class="b-num">03</div>
+      <div class="b-icon"><svg viewBox="0 0 48 48"><polygon points="24 3 28 16 42 16 31 25 35 38 24 30 13 38 17 25 6 16 20 16"/></svg></div>
+      <h3 class="b-title">Premium Materials</h3>
+      <p class="b-text">From PP-flex to full dry carbon — sourced only from certified manufacturers. UV-resistant, heat-treated, and track-proven in UAE conditions.</p>
+    </div>
+    <div class="b-card rv d3">
+      <div class="b-num">04</div>
+      <div class="b-icon"><svg viewBox="0 0 48 48"><path d="M4 20 L24 4 L44 20 L44 44 L4 44 Z"/><line x1="16" y1="44" x2="16" y2="28"/><line x1="32" y1="44" x2="32" y2="28"/><line x1="16" y1="28" x2="32" y2="28"/></svg></div>
+      <h3 class="b-title">Dubai Born & Bred</h3>
+      <p class="b-text">Since 2017 — the UAE's most trusted name in automotive body styling. 3,000+ satisfied builds. Countless podium-worthy transformations.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<div class="about" id="about">
+  <div class="about-vis">
+    <svg class="about-vis-bg" viewBox="0 0 560 700" fill="none" preserveAspectRatio="xMidYMid slice">
+      <path d="M80 430 L140 325 L250 245 L390 225 L490 245 L540 325 L550 430" stroke="rgba(204,0,0,.8)" stroke-width="1.5"/>
+      <circle cx="175" cy="450" r="62" stroke="rgba(204,0,0,.75)" stroke-width="1.5"/>
+      <circle cx="175" cy="450" r="42" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+      <circle cx="175" cy="450" r="14" fill="rgba(204,0,0,.38)"/>
+      <circle cx="475" cy="450" r="62" stroke="rgba(204,0,0,.75)" stroke-width="1.5"/>
+      <circle cx="475" cy="450" r="42" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+      <circle cx="475" cy="450" r="14" fill="rgba(204,0,0,.38)"/>
+      <ellipse cx="325" cy="510" rx="240" ry="13" fill="rgba(204,0,0,.12)"/>
+      <line x1="-50" y1="0" x2="610" y2="700" stroke="rgba(255,255,255,.016)" stroke-width="40"/>
+      <line x1="50" y1="0" x2="710" y2="700" stroke="rgba(255,255,255,.016)" stroke-width="40"/>
+    </svg>
+    <div class="about-slash"></div>
+    <div class="about-year rv">
+      <div class="ay-num">2017</div>
+      <div class="ay-lbl">Established · Dubai, UAE</div>
+    </div>
+  </div>
+  <div class="about-content">
+    <p class="s-eye rv" style="margin-bottom:1.4rem">Our Story</p>
+    <h2 class="about-pull rv d1">BORN IN DUBAI.<br>BUILT FOR <span class="r">EVERY ROAD.</span></h2>
+    <p class="about-p rv d2">Bodykits.ae was founded by automotive enthusiasts who grew tired of compromising. <strong>Poor fitment, cheap materials, and zero accountability</strong> were the norm in the UAE market. We changed that.</p>
+    <p class="about-p rv d3">Every product in our catalogue has been personally vetted, tested on UAE roads, and verified against OEM specifications. <strong>We don't carry anything we wouldn't put on our own cars.</strong> That's not a marketing line — it's how we operate.</p>
+    <div class="about-tags">
+      <span class="a-tag">Dubai Based</span><span class="a-tag">OEM Fitment</span>
+      <span class="a-tag">Carbon Fiber</span><span class="a-tag">Wide Body</span>
+      <span class="a-tag">UAE Delivery</span><span class="a-tag">Custom Orders</span>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="sec cta-sec">
+  <div class="cta-bg" aria-hidden="true">BODYKITS</div>
+  <div class="cta-orb"></div>
+  <div class="cta-inner">
+    <h2 class="cta-title rv">READY TO<br><span class="r">TRANSFORM</span><br>YOUR RIDE?</h2>
+    <p class="cta-sub rv d1">Browse 500+ premium body kits, carbon fiber components, and aero upgrades. All stocked in the UAE. All ready to ship today.</p>
+    <a href="https://www.bodykits.ae/collections" class="cta-btn rv d2">
+      <span>Shop The Collection</span>
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <div class="deliver-wrap">
+      <select class="deliver-sel" id="deliver-sel" aria-label="Estimate delivery to your emirate">
+        <option value="">Estimate delivery time...</option>
+        <option value="dubai">Dubai</option>
+        <option value="abudhabi">Abu Dhabi</option>
+        <option value="sharjah">Sharjah</option>
+        <option value="ajman">Ajman</option>
+        <option value="fujairah">Fujairah</option>
+        <option value="ras">Ras Al Khaimah</option>
+        <option value="umm">Umm Al Quwain</option>
+        <option value="ksa">Saudi Arabia</option>
+        <option value="international">International</option>
+      </select>
+      <div class="deliver-res" id="deliver-out"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="foot-logo">BODY<em>KITS</em>.AE</div>
+      <p class="foot-tag">UAE's premier destination for premium automotive body kits, carbon fiber components, and performance styling. Engineered to dominate.</p>
+    </div>
+    <div class="foot-col">
+      <h5>Collections</h5>
+      <ul>
+        <li><a href="https://www.bodykits.ae/collections">Wide Body Kits</a></li>
+        <li><a href="https://www.bodykits.ae/collections">Front Bumpers</a></li>
+        <li><a href="https://www.bodykits.ae/collections">Rear Diffusers</a></li>
+        <li><a href="https://www.bodykits.ae/collections">Side Skirts</a></li>
+        <li><a href="https://www.bodykits.ae/collections">Carbon Fiber</a></li>
+        <li><a href="https://www.bodykits.ae/collections">Spoilers</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Info</h5>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Fitment Guide</a></li>
+        <li><a href="#">Installation</a></li>
+        <li><a href="#">Shipping Policy</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="#">Dubai, UAE</a></li>
+        <li><a href="mailto:info@bodykits.ae">info@bodykits.ae</a></li>
+        <li><a href="#">WhatsApp Us</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">TikTok</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <p class="foot-copy">&copy; 2025 BODYKITS.AE — All Rights Reserved</p>
+    <div class="foot-socials">
+      <a href="#" class="soc" aria-label="Instagram">IG</a>
+      <a href="#" class="soc" aria-label="TikTok">TK</a>
+      <a href="#" class="soc" aria-label="WhatsApp">WA</a>
+      <a href="#" class="soc" aria-label="YouTube">YT</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   LOADER — split curtain
+============================================================ */
+(function(){
+  const letters = Array.from({length:11},(_,i)=>document.getElementById('lw'+i));
+  letters.forEach((el,i)=>{
+    if(el) setTimeout(()=>el.classList.add('in'), i*70 + 100);
+  });
+
+  const fill = document.getElementById('ld-fill');
+  const pct  = document.getElementById('ld-pct');
+  let p = 0;
+  const tick = setInterval(()=>{
+    p += Math.random()*10 + 3;
+    if(p >= 100){ p = 100; clearInterval(tick); }
+    fill.style.width = p + '%';
+    pct.textContent  = String(Math.floor(p)).padStart(3,'0');
+    if(p >= 100){
+      setTimeout(()=>{
+        document.getElementById('loader').classList.add('out');
+        setTimeout(()=>{
+          document.getElementById('loader').style.display = 'none';
+          startHero();
+        }, 1000);
+      }, 350);
+    }
+  }, 55);
+})();
+
+/* ============================================================
+   CUSTOM CURSOR
+============================================================ */
+const cDot   = document.getElementById('c-dot');
+const cRing  = document.getElementById('c-ring');
+const cLabel = document.getElementById('c-label');
+let mx=0, my=0, rx=0, ry=0;
+
+document.addEventListener('mousemove', e=>{
+  mx = e.clientX; my = e.clientY;
+  cDot.style.left   = mx+'px'; cDot.style.top   = my+'px';
+  cLabel.style.left = mx+'px'; cLabel.style.top = my+'px';
+});
+
+(function loop(){
+  rx += (mx-rx)*.1; ry += (my-ry)*.1;
+  cRing.style.left = rx+'px'; cRing.style.top = ry+'px';
+  requestAnimationFrame(loop);
+})();
+
+function setCursorLabel(txt){
+  cLabel.textContent = txt||'';
+  cLabel.style.opacity = txt ? '1' : '0';
+}
+
+document.querySelectorAll('a,button,.p-card,.b-card,.cta-btn,.btn-red').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-big'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-big'));
+});
+
+/* ============================================================
+   NAV
+============================================================ */
+const nav = document.getElementById('main-nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('stuck',scrollY>80),{passive:true});
+
+/* ============================================================
+   HERO CANVAS — grid + reactive particles + car ghost + scan
+============================================================ */
+(function(){
+  const canvas = document.getElementById('hero-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, t=0, mouse={x:-999,y:-999};
+
+  function resize(){
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  window.addEventListener('resize', resize); resize();
+
+  const heroSection = document.getElementById('hero');
+  heroSection.addEventListener('mousemove', e=>{
+    const r = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - r.left;
+    mouse.y = e.clientY - r.top;
+  });
+  heroSection.addEventListener('mouseleave',()=>{ mouse.x=-999; mouse.y=-999; });
+
+  // 140 particles
+  const particles = Array.from({length:140},()=>({
+    x: Math.random()*1000,
+    y: Math.random()*1000,
+    vx:(Math.random()-.5)*.35,
+    vy:(Math.random()-.5)*.35,
+    r: Math.random()*1.4+.3,
+    a: Math.random()*.45+.08,
+    red: Math.random()>.65,
+    base_vx: 0, base_vy: 0
+  }));
+  particles.forEach(p=>{ p.base_vx=p.vx; p.base_vy=p.vy; });
+
+  function drawGrid(){
+    const g = 72;
+    ctx.strokeStyle = 'rgba(255,255,255,.016)';
+    ctx.lineWidth = .5;
+    for(let x=0;x<W;x+=g){
+      ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+    }
+    for(let y=0;y<H;y+=g){
+      ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+    }
+    // Accent grid line at mouse column/row
+    if(mouse.x > 0){
+      const gx = Math.floor(mouse.x/g)*g;
+      const gy = Math.floor(mouse.y/g)*g;
+      ctx.strokeStyle = 'rgba(204,0,0,.06)';
+      ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke();
+    }
+  }
+
+  function drawCar(){
+    const cx = W*.5, cy = H*.5;
+    const s  = Math.min(W*.72, H*.68) / 820;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(s, s);
+    ctx.translate(-410, -190);
+
+    const pulse = .07 + .05*Math.sin(t*.018);
+    ctx.globalAlpha = pulse;
+    ctx.strokeStyle = 'rgba(204,0,0,1)';
+    ctx.lineWidth = 1.5;
+
+    // Body outline
+    ctx.beginPath();
+    ctx.moveTo(60,270); ctx.lineTo(110,205); ctx.lineTo(210,148);
+    ctx.lineTo(360,130); ctx.lineTo(480,130); ctx.lineTo(620,148);
+    ctx.lineTo(700,205); ctx.lineTo(740,270);
+    ctx.lineTo(700,292); ctx.lineTo(110,292); ctx.closePath();
+    ctx.stroke();
+
+    // Windows
+    ctx.globalAlpha = pulse*.4;
+    ctx.strokeStyle = 'rgba(255,255,255,.5)';
+    ctx.lineWidth = .7;
+    ctx.beginPath(); ctx.moveTo(210,148); ctx.lineTo(280,175); ctx.lineTo(360,180); ctx.lineTo(360,130); ctx.closePath(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(480,130); ctx.lineTo(480,180); ctx.lineTo(560,175); ctx.lineTo(620,148); ctx.closePath(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(284,175); ctx.lineTo(362,180); ctx.lineTo(362,145); ctx.lineTo(286,145); ctx.closePath(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(480,145); ctx.lineTo(556,145); ctx.lineTo(558,175); ctx.lineTo(480,180); ctx.closePath(); ctx.stroke();
+
+    // Wheels
+    ctx.globalAlpha = pulse*1.3;
+    ctx.strokeStyle = 'rgba(204,0,0,1)';
+    ctx.lineWidth = 1.8;
+    ctx.beginPath(); ctx.arc(195,290,44,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(615,290,44,0,Math.PI*2); ctx.stroke();
+    ctx.globalAlpha = pulse*.3;
+    ctx.strokeStyle = 'rgba(255,255,255,.8)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(195,290,30,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(615,290,30,0,Math.PI*2); ctx.stroke();
+
+    // Lights
+    ctx.globalAlpha = pulse*1.5;
+    ctx.strokeStyle = 'rgba(204,0,0,1)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(700,205); ctx.lineTo(730,226); ctx.lineTo(740,255); ctx.lineTo(714,249); ctx.lineTo(698,224); ctx.closePath(); ctx.stroke();
+    ctx.fillStyle = 'rgba(204,0,0,.2)'; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(110,205); ctx.lineTo(80,226); ctx.lineTo(60,255); ctx.lineTo(86,249); ctx.lineTo(112,224); ctx.closePath(); ctx.stroke();
+    ctx.fillStyle = 'rgba(204,0,0,.4)'; ctx.fill();
+
+    // Ground shadow
+    ctx.globalAlpha = .09;
+    const gg = ctx.createRadialGradient(410,340,0,410,340,320);
+    gg.addColorStop(0,'rgba(204,0,0,1)'); gg.addColorStop(1,'rgba(204,0,0,0)');
+    ctx.fillStyle = gg;
+    ctx.fillRect(60,320,700,28);
+
+    // Scan line
+    const scanY = ((t*.8) % (820+120)) - 60;
+    ctx.globalAlpha = .03;
+    const sg = ctx.createLinearGradient(0,scanY-40,0,scanY+40);
+    sg.addColorStop(0,'transparent'); sg.addColorStop(.5,'rgba(204,0,0,.8)'); sg.addColorStop(1,'transparent');
+    ctx.fillStyle=sg;
+    ctx.fillRect(0,scanY-40,820,80);
+
+    ctx.restore();
+  }
+
+  function render(){
+    t++;
+    ctx.clearRect(0,0,W,H);
+
+    // BG
+    const bg = ctx.createRadialGradient(W*.7,H*.4,0,W*.7,H*.4,W*.9);
+    bg.addColorStop(0,'rgba(18,4,4,.98)');
+    bg.addColorStop(1,'rgba(4,4,4,1)');
+    ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
+
+    drawGrid();
+
+    // Mouse spotlight
+    if(mouse.x>0){
+      const glow = ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,280);
+      glow.addColorStop(0,'rgba(204,0,0,.07)');
+      glow.addColorStop(1,'rgba(204,0,0,0)');
+      ctx.fillStyle=glow; ctx.fillRect(0,0,W,H);
+    }
+
+    drawCar();
+
+    // Particles
+    particles.forEach(p=>{
+      if(mouse.x>0){
+        const dx=mouse.x-p.x, dy=mouse.y-p.y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<200&&dist>0){
+          const f=(200-dist)/200*.07;
+          p.vx += dx/dist*f; p.vy += dy/dist*f;
+        }
+      }
+      p.vx *= .97; p.vy *= .97;
+      const spd = Math.sqrt(p.vx*p.vx+p.vy*p.vy);
+      if(spd>1.8){ p.vx=p.vx/spd*1.8; p.vy=p.vy/spd*1.8; }
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0)p.x=W; if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = p.red ? `rgba(204,0,0,${p.a})` : `rgba(255,255,255,${p.a*.28})`;
+      ctx.fill();
+    });
+
+    // Connection mesh
+    const reds = particles.filter(p=>p.red);
+    reds.forEach((a,i)=>{
+      reds.slice(i+1).forEach(b=>{
+        const dx=a.x-b.x, dy=a.y-b.y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<140){
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle=`rgba(204,0,0,${(.16*(1-d/140)).toFixed(3)})`;
+          ctx.lineWidth=.5; ctx.stroke();
+        }
+      });
+    });
+
+    // Left fade
+    const fade = ctx.createLinearGradient(0,0,W*.32,0);
+    fade.addColorStop(0,'rgba(4,4,4,1)'); fade.addColorStop(1,'rgba(4,4,4,0)');
+    ctx.fillStyle=fade; ctx.fillRect(0,0,W*.32,H);
+
+    requestAnimationFrame(render);
+  }
+  render();
+})();
+
+/* ============================================================
+   MARQUEE
+============================================================ */
+(function(){
+  const row1 = ['Front Bumpers','Rear Diffusers','Side Skirts','Carbon Fiber','Wide Body Kits','Spoilers','Hood Upgrades','Splitters'];
+  const row2 = ['Lamborghini','Ferrari','Porsche','BMW','Mercedes','Nissan GTR','Audi R8','Toyota Supra'];
+  function buildRow(ids, labels, hiEvery){
+    const html = labels.map((l,i)=>
+      `<span class="mq-item${i%hiEvery===0?' hi':''}"><span class="mq-pip"></span>${l}</span>`
+    ).join('').repeat(3);
+    ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=html; });
+  }
+  buildRow(['mq1','mq1b'], row1, 3);
+  buildRow(['mq2','mq2b'], row2, 4);
+})();
+
+/* ============================================================
+   TEXT SCRAMBLE
+============================================================ */
+function scrambleText(el, duration){
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#';
+  const target = el.textContent.trim();
+  const start  = performance.now();
+  return new Promise(res=>{
+    (function tick(now){
+      const pct     = Math.min((now-start)/duration, 1);
+      const revealed = Math.floor(pct * target.length);
+      let out = '';
+      for(let i=0; i<target.length; i++){
+        if(target[i]===' '){ out+=' '; continue; }
+        if(i < revealed){
+          out += `<span style="color:inherit">${target[i]}</span>`;
+        } else {
+          const c = chars[Math.floor(Math.random()*chars.length)];
+          out += `<span style="color:rgba(204,0,0,.4)">${c}</span>`;
+        }
+      }
+      el.innerHTML = out;
+      if(pct<1){ requestAnimationFrame(tick); }
+      else{ el.textContent=target; res(); }
+    })(start);
+  });
+}
+
+/* ============================================================
+   HERO INTRO
+============================================================ */
+function startHero(){
+  function show(el, delay){
+    if(!el) return;
+    setTimeout(()=>{
+      el.style.transition = 'opacity .9s ease, transform .9s ease';
+      el.style.opacity='1'; el.style.transform='none';
+    }, delay);
+  }
+  function slide(id, delay){
+    setTimeout(()=>{
+      const el=document.getElementById(id);
+      if(!el) return;
+      el.style.transition='transform 1s cubic-bezier(.16,1,.3,1)';
+      el.style.transform='translateY(0)';
+    }, delay);
+  }
+
+  show(document.getElementById('h-eye'), 80);
+  setTimeout(()=>document.getElementById('h-stock')?.classList.add('in'), 260);
+  slide('hl1', 180);
+  slide('hl2', 340);
+  slide('hl3', 500);
+
+  // Scramble REDEFINE
+  setTimeout(()=>{
+    const el = document.getElementById('hl1');
+    if(el) scrambleText(el, 900);
+  }, 380);
+
+  // Glitch REDEFINE after scramble
+  setTimeout(()=>{
+    const wrap = document.getElementById('hl1');
+    if(wrap){ wrap.classList.add('glitching'); setTimeout(()=>wrap.classList.remove('glitching'),400); }
+  }, 1400);
+
+  show(document.getElementById('h-sub'),  720);
+  show(document.getElementById('h-ctas'), 900);
+  show(document.getElementById('h-scroll'), 1100);
+
+  [0,1,2,3].forEach(i=>{
+    setTimeout(()=>{
+      const el=document.getElementById('sc'+i);
+      if(!el) return;
+      el.style.transition='opacity .65s ease,transform .65s ease';
+      el.style.opacity='1'; el.style.transform='none';
+    }, 1200+i*110);
+  });
+  setTimeout(runCounters, 1800);
+}
+
+/* ============================================================
+   COUNTERS
+============================================================ */
+function easeOutExpo(t){ return t===1?1:1-Math.pow(2,-10*t); }
+
+function animateCounter(el, target, duration){
+  const start = performance.now();
+  (function tick(now){
+    const pct  = Math.min((now-start)/duration, 1);
+    const val  = Math.round(easeOutExpo(pct)*target);
+    el.textContent = val.toLocaleString();
+    if(pct<1) requestAnimationFrame(tick);
+    else el.textContent = target.toLocaleString();
+  })(start);
+}
+
+function runCounters(){
+  document.querySelectorAll('.cnt').forEach(el=>{
+    animateCounter(el, +el.dataset.t, 1600);
+  });
+}
+
+function runMetricsCounters(){
+  document.querySelectorAll('.mcnt').forEach(el=>{
+    animateCounter(el, +el.dataset.t, 2000);
+  });
+}
+
+/* ============================================================
+   SCROLL REVEAL (Intersection Observer)
+============================================================ */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('on');
+      if(e.target.classList.contains('m-cell')) runMetricsCounters();
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:.1});
+document.querySelectorAll('.rv,.rv-clip,.m-cell,.b-card').forEach(el=>io.observe(el));
+
+/* ============================================================
+   HORIZONTAL PINNED PRODUCTS SCROLL
+============================================================ */
+(function(){
+  const outer    = document.getElementById('products-outer');
+  const track    = document.getElementById('products-track');
+  const fillBar  = document.getElementById('ps-fill');
+  const idxLabel = document.getElementById('ps-idx');
+  if(!outer||!track) return;
+
+  // Only run on desktop where position:sticky is active
+  function isDesktop(){ return window.innerWidth > 1024; }
+
+  function update(){
+    if(!isDesktop()) return;
+    const outerTop  = outer.offsetTop;
+    const scrolled  = Math.max(0, scrollY - outerTop);
+    const maxScroll = outer.offsetHeight - window.innerHeight;
+    const pct       = Math.min(1, scrolled / maxScroll);
+
+    const sideW   = document.querySelector('.products-sidebar')?.offsetWidth || 0;
+    const maxTx   = track.scrollWidth - (window.innerWidth - sideW);
+    track.style.transform = `translateX(${-pct * maxTx}px)`;
+
+    if(fillBar) fillBar.style.width = (pct*100)+'%';
+
+    if(idxLabel){
+      const cards = track.querySelectorAll('.p-card');
+      const idx   = Math.min(cards.length-1, Math.floor(pct*(cards.length)));
+      idxLabel.textContent = `0${idx+1} / 0${cards.length}`;
+    }
+  }
+
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update);
+
+  // Cursor labels on product section
+  const viewport = document.getElementById('products-viewport');
+  if(viewport){
+    viewport.addEventListener('mouseenter',()=>setCursorLabel('DRAG'));
+    viewport.addEventListener('mouseleave',()=>setCursorLabel(''));
+  }
+  track.querySelectorAll('.p-card').forEach(c=>{
+    c.addEventListener('mouseenter',()=>setCursorLabel('VIEW'));
+    c.addEventListener('mouseleave',()=>setCursorLabel('DRAG'));
+  });
+})();
+
+/* ============================================================
+   3D CARD TILT
+============================================================ */
+document.querySelectorAll('.p-card,.b-card').forEach(card=>{
+  card.addEventListener('mousemove', e=>{
+    const r  = card.getBoundingClientRect();
+    const cx = r.width/2, cy = r.height/2;
+    const x  = e.clientX-r.left-cx;
+    const y  = e.clientY-r.top-cy;
+    card.style.transition = 'transform .06s ease, border-color .35s';
+    card.style.transform  = `perspective(900px) rotateX(${(-y/cy*5).toFixed(2)}deg) rotateY(${(x/cx*5).toFixed(2)}deg) translateZ(6px)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transition = 'transform .6s ease, border-color .35s';
+    card.style.transform  = 'perspective(900px) rotateX(0) rotateY(0) translateZ(0)';
+  });
+});
+
+/* ============================================================
+   MAGNETIC BUTTONS
+============================================================ */
+document.querySelectorAll('.btn-red,.cta-btn,.nav-cta').forEach(btn=>{
+  btn.addEventListener('mousemove', e=>{
+    const r  = btn.getBoundingClientRect();
+    const dx = (e.clientX-(r.left+r.width/2))*.2;
+    const dy = (e.clientY-(r.top+r.height/2))*.2;
+    btn.style.transform = `translate(${dx}px,${dy}px)`;
+  });
+  btn.addEventListener('mouseleave',()=>{
+    btn.style.transition='transform .6s cubic-bezier(.16,1,.3,1)';
+    btn.style.transform='';
+    setTimeout(()=>btn.style.transition='',600);
+  });
+});
+
+/* ============================================================
+   SCROLL VELOCITY SKEW
+============================================================ */
+let lastSY = 0, skewTarget = 0, currentSkew = 0;
+const skewEl = document.querySelector('.hero-left');
+
+window.addEventListener('scroll',()=>{
+  const v = scrollY - lastSY;
+  skewTarget = Math.max(-3, Math.min(3, v * -.04));
+  lastSY = scrollY;
+},{passive:true});
+
+(function skewLoop(){
+  currentSkew += (skewTarget-currentSkew)*.08;
+  skewTarget  *= .88;
+  if(skewEl && Math.abs(currentSkew)>.001){
+    // Apply subtle skew to the hero title for premium feel
+    const title = document.querySelector('.hero-title');
+    if(title) title.style.transform = `skewY(${currentSkew.toFixed(3)}deg)`;
+  }
+  requestAnimationFrame(skewLoop);
+})();
+
+/* ============================================================
+   MEGA MENU
+============================================================ */
+(function(){
+  const triggers = document.querySelectorAll('.mega-trigger');
+  let activeId   = null;
+  let closeTimer = null;
+
+  /* position megas below nav */
+  function setMegaTop(){
+    const h = document.getElementById('main-nav').offsetHeight;
+    document.querySelectorAll('.mega').forEach(m => m.style.top = h+'px');
+  }
+  setMegaTop();
+  window.addEventListener('scroll', setMegaTop, {passive:true});
+  window.addEventListener('resize', setMegaTop);
+
+  /* stagger brand items on open */
+  function triggerStagger(megaEl){
+    const items = megaEl.querySelectorAll('.bi');
+    items.forEach(b=>{ b.classList.remove('entering'); void b.offsetWidth; });
+    items.forEach((b,i)=>{
+      b.style.setProperty('--bi-delay',(i*18)+'ms');
+      b.classList.add('entering');
+    });
+  }
+  function clearStagger(megaEl){
+    megaEl.querySelectorAll('.bi').forEach(b=>b.classList.remove('entering'));
+  }
+
+  /* cursor spotlight per mega-body */
+  document.querySelectorAll('.mega-body').forEach(body=>{
+    body.addEventListener('mousemove',e=>{
+      const r = body.getBoundingClientRect();
+      body.style.setProperty('--mx',(e.clientX-r.left)+'px');
+      body.style.setProperty('--my',(e.clientY-r.top)+'px');
+    });
+    body.addEventListener('mouseleave',()=>{
+      body.style.setProperty('--mx','-999px');
+      body.style.setProperty('--my','-999px');
+    });
+  });
+
+  /* open / close */
+  function openMega(id){
+    clearTimeout(closeTimer);
+    if(activeId && activeId !== id){
+      const prev = document.getElementById(activeId);
+      if(prev){ prev.classList.remove('open'); clearStagger(prev); }
+      const prevTrig = document.querySelector(`[data-mega="${activeId}"]`);
+      if(prevTrig) prevTrig.closest('.mega-trigger').classList.remove('open');
+    }
+    const el = document.getElementById(id);
+    if(el){ el.classList.add('open'); activeId = id; triggerStagger(el); }
+    const trig = document.querySelector(`[data-mega="${id}"]`);
+    if(trig) trig.closest('.mega-trigger').classList.add('open');
+  }
+
+  function closeMega(delay=130){
+    closeTimer = setTimeout(()=>{
+      if(activeId){
+        const el = document.getElementById(activeId);
+        if(el){ el.classList.remove('open'); clearStagger(el); }
+        const trig = document.querySelector(`[data-mega="${activeId}"]`);
+        if(trig) trig.closest('.mega-trigger').classList.remove('open');
+        activeId = null;
+      }
+    }, delay);
+  }
+
+  triggers.forEach(trigger=>{
+    const link = trigger.querySelector('a[data-mega]');
+    if(!link) return;
+    const id = link.dataset.mega;
+    trigger.addEventListener('mouseenter',()=>openMega(id));
+    trigger.addEventListener('mouseleave',()=>closeMega());
+    const mega = document.getElementById(id);
+    if(mega){
+      mega.addEventListener('mouseenter',()=>clearTimeout(closeTimer));
+      mega.addEventListener('mouseleave',()=>closeMega());
+    }
+  });
+
+  /* click outside closes */
+  document.addEventListener('click',e=>{
+    if(!e.target.closest('.mega-trigger') && !e.target.closest('.mega')) closeMega(0);
+  });
+
+  /* keyboard nav: arrows + Escape */
+  document.addEventListener('keydown',e=>{
+    if(!activeId) return;
+    const mega = document.getElementById(activeId);
+    if(!mega) return;
+    const items = [...mega.querySelectorAll('.bi')].filter(b=>b.offsetParent!==null && b.style.display!=='none');
+    if(!items.length) return;
+    const focused = document.activeElement;
+    const idx = items.indexOf(focused);
+    if(e.key==='Escape'){
+      closeMega(0);
+      document.querySelector(`[data-mega="${activeId}"]`)?.focus();
+      return;
+    }
+    if(!['ArrowRight','ArrowLeft','ArrowDown','ArrowUp'].includes(e.key)) return;
+    e.preventDefault();
+    const gridEl = mega.querySelector('.brand-g');
+    const cols = gridEl ? Math.round(gridEl.offsetWidth / Math.max(items[0].offsetWidth,1)) : 1;
+    let next = idx < 0 ? 0 : idx;
+    if(e.key==='ArrowRight') next = idx+1;
+    else if(e.key==='ArrowLeft') next = Math.max(0,idx-1);
+    else if(e.key==='ArrowDown') next = idx+cols;
+    else if(e.key==='ArrowUp') next = Math.max(0,idx-cols);
+    items[Math.min(items.length-1, Math.max(0,next))]?.focus();
+  });
+
+  /* category filter tabs (car brands only) */
+  document.querySelectorAll('.mega-tabs').forEach(tabsEl=>{
+    const body = tabsEl.closest('.mega-body');
+    const grid = body?.querySelector('.brand-g');
+    const empty = body?.querySelector('.mega-empty');
+    const count = body?.querySelector('.ms-count');
+    const hdCount = body?.querySelector('.mega-hd-r');
+    if(!grid) return;
+    tabsEl.querySelectorAll('.mt').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        tabsEl.querySelectorAll('.mt').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const f = btn.dataset.filter;
+        let visible = 0;
+        grid.querySelectorAll('.bi').forEach(bi=>{
+          const show = f==='all' || bi.dataset.cat===f;
+          bi.style.display = show ? '' : 'none';
+          if(show) visible++;
+        });
+        if(count) count.textContent = visible+(visible===1?' Brand':' Brands');
+        if(hdCount) hdCount.textContent = visible+(visible===1?' Brand':' Brands');
+        if(empty) empty.classList.toggle('show', visible===0);
+      });
+    });
+  });
+
+  /* live search */
+  document.querySelectorAll('.ms-in').forEach(inp=>{
+    inp.addEventListener('input',()=>{
+      const q = inp.value.trim().toLowerCase();
+      const body = inp.closest('.mega-body');
+      if(!body) return;
+      const grid = body.querySelector('.brand-g');
+      const empty = body.querySelector('.mega-empty');
+      const count = body.querySelector('.ms-count');
+      const hdCount = body.querySelector('.mega-hd-r');
+      const tabs = body.querySelector('.mega-tabs');
+      if(!grid) return;
+      if(tabs && q){
+        tabs.querySelectorAll('.mt').forEach(b=>b.classList.remove('active'));
+        const all = tabs.querySelector('[data-filter="all"]');
+        if(all) all.classList.add('active');
+        grid.querySelectorAll('.bi').forEach(bi=>bi.style.display='');
+      }
+      let visible = 0;
+      grid.querySelectorAll('.bi').forEach(bi=>{
+        const nm = (bi.querySelector('.bi-nm')?.textContent||'').toLowerCase();
+        const show = !q || nm.includes(q);
+        bi.style.display = show ? '' : 'none';
+        if(show) visible++;
+      });
+      if(count) count.textContent = visible+(visible===1?' Brand':' Brands');
+      if(hdCount) hdCount.textContent = visible+(visible===1?' Brand':' Brands');
+      if(empty) empty.classList.toggle('show', visible===0);
+    });
+  });
+
+  /* cursor labels on brand items */
+  document.querySelectorAll('.bi').forEach(item=>{
+    item.addEventListener('mouseenter',()=>setCursorLabel('VIEW'));
+    item.addEventListener('mouseleave',()=>setCursorLabel(''));
+  });
+})();
+
+/* ============================================================
+   GLITCH TRIGGER on SCROLL
+============================================================ */
+let glitchTimeout;
+window.addEventListener('scroll',()=>{
+  const wrap = document.querySelector('.glitch-wrap');
+  if(!wrap) return;
+  clearTimeout(glitchTimeout);
+  if(scrollY < 100){
+    glitchTimeout = setTimeout(()=>{
+      wrap.classList.add('glitching');
+      setTimeout(()=>wrap.classList.remove('glitching'), 350);
+    }, 200);
+  }
+},{passive:true});
+
+/* ============================================================
+   LERP SMOOTH SCROLL
+============================================================ */
+(function(){
+  if('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+  let target = scrollY, current = scrollY, raf = null;
+  const ease = 0.095;
+  function maxSY(){ return document.documentElement.scrollHeight - innerHeight; }
+  function clamp(v){ return Math.max(0, Math.min(maxSY(), v)); }
+
+  window.addEventListener('wheel', e=>{
+    e.preventDefault();
+    target = clamp(target + e.deltaY * 0.72);
+    if(!raf) raf = requestAnimationFrame(tick);
+  },{passive:false});
+
+  function tick(){
+    current += (target - current) * ease;
+    window.scrollTo(0, current);
+    if(Math.abs(target - current) > 0.18){ raf = requestAnimationFrame(tick); }
+    else{ current = target; window.scrollTo(0, target); raf = null; }
+  }
+
+  window.addEventListener('keydown', e=>{
+    const k = e.key, m = maxSY();
+    if(k==='ArrowDown') target = clamp(target + 80);
+    else if(k==='ArrowUp') target = clamp(target - 80);
+    else if(k==='PageDown') target = clamp(target + innerHeight * .88);
+    else if(k==='PageUp') target = clamp(target - innerHeight * .88);
+    else if(k===' ') target = clamp(target + innerHeight * .7);
+    else if(k==='Home') target = 0;
+    else if(k==='End') target = m;
+    else return;
+    e.preventDefault();
+    if(!raf) raf = requestAnimationFrame(tick);
+  });
+
+  // Expose sync for curtain transitions
+  window._lerpSync = ()=>{ target = current = Math.round(scrollY); };
+  window.addEventListener('hashchange', ()=>{ target = current = scrollY; });
+})();
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+============================================================ */
+(function(){
+  const b = document.getElementById('spb');
+  if(!b) return;
+  window.addEventListener('scroll',()=>{
+    const pct = scrollY / (document.documentElement.scrollHeight - innerHeight) * 100;
+    b.style.width = Math.min(100, pct) + '%';
+  },{passive:true});
+})();
+
+/* ============================================================
+   NAV LOGO 3D TILT
+============================================================ */
+(function(){
+  const logo = document.querySelector('.nav-logo');
+  const nav  = document.getElementById('main-nav');
+  if(!logo||!nav) return;
+  nav.addEventListener('mousemove',e=>{
+    const r  = logo.getBoundingClientRect();
+    const cx = r.left + r.width/2;
+    const cy = r.top  + r.height/2;
+    const dx = (e.clientX - cx) / (r.width  * .5);
+    const dy = (e.clientY - cy) / (r.height * .5);
+    logo.style.transition = 'transform .07s ease';
+    logo.style.transform  = `perspective(420px) rotateY(${dx*14}deg) rotateX(${-dy*8}deg) scale(1.06)`;
+  });
+  nav.addEventListener('mouseleave',()=>{
+    logo.style.transition = 'transform .7s var(--ease-expo)';
+    logo.style.transform  = '';
+  });
+})();
+
+/* ============================================================
+   CLICK PARTICLE BURST
+============================================================ */
+(function(){
+  const c = document.getElementById('pc');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  let W, H;
+  const resize = () => { W = c.width = innerWidth; H = c.height = innerHeight; };
+  resize();
+  window.addEventListener('resize', resize);
+
+  const E = [];
+  document.addEventListener('click', e=>{
+    for(let i=0;i<24;i++){
+      const a = (Math.PI*2*i/24) + (Math.random()-.5)*.9;
+      const s = 1.5 + Math.random()*6.5;
+      const col = Math.random()<.65 ? [204,0,0] : [255,80,0];
+      E.push({x:e.clientX,y:e.clientY,vx:Math.cos(a)*s,vy:Math.sin(a)*s-1.8,l:1,sz:1.5+Math.random()*3.5,c:col});
+    }
+  });
+
+  (function loop(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=E.length-1;i>=0;i--){
+      const p=E[i];
+      p.x+=p.vx; p.y+=p.vy; p.vy+=.22; p.vx*=.93; p.l-=.028;
+      if(p.l<=0){E.splice(i,1);continue}
+      ctx.save();
+      ctx.globalAlpha = p.l;
+      ctx.shadowColor  = `rgba(${p.c[0]},${p.c[1]},${p.c[2]},.9)`;
+      ctx.shadowBlur   = 10;
+      ctx.fillStyle    = `rgb(${p.c[0]},${p.c[1]},${p.c[2]})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.sz*p.l, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+    requestAnimationFrame(loop);
+  })();
+})();
+
+/* ============================================================
+   RPM SCROLL GAUGE
+============================================================ */
+(function(){
+  const gauge  = document.getElementById('rpm-g');
+  const needle = document.getElementById('rpm-needle');
+  const arc    = document.getElementById('rpm-arc');
+  const pctEl  = document.getElementById('rpm-pct');
+  if(!gauge) return;
+  const ARC_LEN = 101;
+  let shown = false;
+  window.addEventListener('scroll',()=>{
+    const p = Math.min(1, scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight));
+    if(!shown && scrollY > 60){ shown = true; gauge.classList.add('vis'); }
+    const deg = p * 180 - 90;
+    if(needle) needle.setAttribute('transform',`rotate(${deg.toFixed(2)},38,44)`);
+    if(arc){ arc.style.strokeDashoffset = (ARC_LEN*(1-p)).toFixed(2); arc.style.stroke = p>.8?'#ff2020':'rgba(204,0,0,.85)'; }
+    if(pctEl) pctEl.textContent = Math.round(p*100)+'%';
+  },{passive:true});
+})();
+
+/* ============================================================
+   TERMINAL STOCK TICKER
+============================================================ */
+(function(){
+  const el = document.getElementById('ticker-inner');
+  if(!el) return;
+  const items = [
+    {n:'ZACOE WIDEBODY KIT',s:'IN STOCK',sc:'tk-in',p:'AED 4,200'},
+    {n:'DARWIN PRO CARBON LIP',s:'3 LEFT',sc:'tk-low',p:'AED 1,850'},
+    {n:'McLAREN 720S FULL KIT',s:'1 LEFT',sc:'tk-low',p:'AED 18,500'},
+    {n:'LAMBORGHINI URUS AERO',s:'IN STOCK',sc:'tk-in',p:'AED 12,900'},
+    {n:'BMW M4 F82 SIDE SKIRTS',s:'IN STOCK',sc:'tk-in',p:'AED 2,100'},
+    {n:'FERRARI 488 DIFFUSER SET',s:'IN STOCK',sc:'tk-in',p:'AED 6,800'},
+    {n:'PORSCHE 992 GT3 KIT',s:'2 LEFT',sc:'tk-low',p:'AED 9,200'},
+    {n:'NISSAN GTR R35 AERO',s:'IN STOCK',sc:'tk-in',p:'AED 5,400'},
+    {n:'CAMARO SS WIDEBODY',s:'IN STOCK',sc:'tk-in',p:'AED 3,600'},
+    {n:'TOYOTA SUPRA A90 KIT',s:'4 LEFT',sc:'tk-low',p:'AED 7,100'},
+    {n:'MERCEDES G63 BODY KIT',s:'IN STOCK',sc:'tk-in',p:'AED 8,400'},
+    {n:'AUDI RS7 CARBON LIP',s:'IN STOCK',sc:'tk-in',p:'AED 3,200'},
+  ];
+  const html = items.map(d=>
+    `<span class="tk-item"><span class="tk-name">${d.n}</span><span class="tk-dot"></span><span class="${d.sc}">${d.s}</span><span class="tk-dot"></span><span class="tk-px">${d.p}</span></span>`
+  ).join('');
+  el.innerHTML = html + html; // duplicate for seamless loop
+})();
+
+/* ============================================================
+   BEFORE / AFTER SLIDER
+============================================================ */
+(function(){
+  const wrap   = document.getElementById('ba-wrap');
+  if(!wrap) return;
+  let drag = false;
+
+  function setPct(clientX){
+    const r = wrap.getBoundingClientRect();
+    const p = Math.max(2, Math.min(98, ((clientX - r.left) / r.width) * 100));
+    wrap.style.setProperty('--pct', p + '%');
+  }
+
+  wrap.addEventListener('mousedown',  e=>{ drag=true; setPct(e.clientX); });
+  document.addEventListener('mousemove', e=>{ if(drag) setPct(e.clientX); });
+  document.addEventListener('mouseup',  ()=>{ drag=false; });
+  wrap.addEventListener('touchstart',  e=>{ drag=true; setPct(e.touches[0].clientX); e.preventDefault(); },{passive:false});
+  document.addEventListener('touchmove', e=>{ if(drag){ setPct(e.touches[0].clientX); e.preventDefault(); } },{passive:false});
+  document.addEventListener('touchend',  ()=>{ drag=false; });
+})();
+
+/* ============================================================
+   ENGINE AMBIENT SOUND TOGGLE
+============================================================ */
+(function(){
+  const btn = document.getElementById('snd-btn');
+  if(!btn) return;
+  let on=false, ac=null, osc=null, gainNode=null;
+
+  function boot(){
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if(!Ctx) return false;
+    ac = new Ctx();
+    gainNode = ac.createGain();
+    gainNode.gain.value = 0;
+
+    const filter = ac.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 220;
+    filter.Q.value = 0.9;
+
+    osc = ac.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.value = 57;
+
+    // Subtle idle wobble via LFO
+    const lfo = ac.createOscillator();
+    const lfoG = ac.createGain();
+    lfo.frequency.value = 5;
+    lfoG.gain.value = 2.5;
+    lfo.connect(lfoG); lfoG.connect(osc.frequency);
+    lfo.start();
+
+    osc.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(ac.destination);
+    osc.start();
+    return true;
+  }
+
+  btn.addEventListener('click',()=>{
+    if(!on){
+      if(!ac && !boot()) return;
+      if(ac.state==='suspended') ac.resume();
+      gainNode.gain.linearRampToValueAtTime(0.042, ac.currentTime + 0.35);
+      on=true; btn.classList.add('on');
+    } else {
+      gainNode.gain.linearRampToValueAtTime(0, ac.currentTime + 0.35);
+      on=false; btn.classList.remove('on');
+    }
+  });
+
+  // Rev up on CTA hover
+  document.querySelectorAll('.btn-red,.cta-btn').forEach(b=>{
+    b.addEventListener('mouseenter',()=>{ if(!on||!osc) return; osc.frequency.linearRampToValueAtTime(88, ac.currentTime+.08); gainNode.gain.linearRampToValueAtTime(.07, ac.currentTime+.08); });
+    b.addEventListener('mouseleave',()=>{ if(!on||!osc) return; osc.frequency.linearRampToValueAtTime(57, ac.currentTime+.28); gainNode.gain.linearRampToValueAtTime(.042, ac.currentTime+.28); });
+  });
+})();
+
+/* ============================================================
+   PAGE CURTAIN TRANSITIONS (anchor links)
+============================================================ */
+(function(){
+  const curtain = document.getElementById('curtain');
+  if(!curtain) return;
+  document.querySelectorAll('a[href^="#"]').forEach(link=>{
+    link.addEventListener('click',e=>{
+      const id = link.getAttribute('href');
+      if(!id || id==='#') return;
+      const target = document.querySelector(id);
+      if(!target) return;
+      e.preventDefault();
+      curtain.classList.remove('out');
+      curtain.classList.add('in');
+      setTimeout(()=>{
+        const y = target.getBoundingClientRect().top + scrollY;
+        window.scrollTo(0,y);
+        if(window._lerpSync) window._lerpSync();
+      }, 400);
+      setTimeout(()=>{
+        curtain.classList.remove('in');
+        curtain.classList.add('out');
+        setTimeout(()=>curtain.classList.remove('out'), 500);
+      }, 750);
+    });
+  });
+})();
+
+/* ============================================================
+   AED / USD DUAL PRICE
+============================================================ */
+(function(){
+  const rate = 0.272;
+  document.querySelectorAll('.p-price').forEach(el=>{
+    const n = parseInt((el.textContent||'').replace(/[^0-9]/g,''));
+    if(!n) return;
+    const usd = Math.round(n * rate);
+    const s = document.createElement('span');
+    s.className='p-usd';
+    s.textContent = `≈ $${usd.toLocaleString()} USD`;
+    el.appendChild(s);
+  });
+})();
+
+/* ============================================================
+   DELIVERY ESTIMATOR
+============================================================ */
+(function(){
+  const sel = document.getElementById('deliver-sel');
+  const out = document.getElementById('deliver-out');
+  if(!sel||!out) return;
+  const map = {
+    dubai:'📦 Next day · Same day available',
+    abudhabi:'📦 1–2 day delivery',
+    sharjah:'📦 Same day available',
+    ajman:'📦 1–2 day delivery',
+    fujairah:'📦 2–3 day delivery',
+    ras:'📦 2–3 day delivery',
+    umm:'📦 2–3 day delivery',
+    ksa:'📦 3–5 day delivery',
+    international:'📦 7–14 day delivery',
+  };
+  sel.addEventListener('change',()=>{
+    const v = sel.value;
+    out.textContent = map[v]||'';
+    out.classList.toggle('show', !!v);
+  });
+})();
+
+/* ============================================================
+   JUST-PURCHASED TOAST NOTIFICATIONS
+============================================================ */
+(function(){
+  const wrap = document.getElementById('toast-wrap');
+  if(!wrap) return;
+  const data = [
+    {i:'🏎️',n:'McLaren 720S Wide Body Kit',l:'Dubai, UAE',t:2},
+    {i:'🔥',n:'Carbon Fibre Front Bumper',l:'Abu Dhabi, UAE',t:5},
+    {i:'⚡',n:'Nissan GTR R35 Full Kit',l:'Dubai Marina, UAE',t:1},
+    {i:'💎',n:'Lamborghini Urus Aero Kit',l:'Palm Jumeirah, UAE',t:8},
+    {i:'🚀',n:'BMW M4 Competition Kit',l:'Sharjah, UAE',t:3},
+    {i:'⚙️',n:'Porsche 992 GT3 Body Kit',l:'Dubai, UAE',t:11},
+    {i:'🏁',n:'Toyota Supra Side Skirt Set',l:'Riyadh, KSA',t:6},
+    {i:'🛞',n:'Ferrari 488 Diffuser Set',l:'Dubai, UAE',t:4},
+  ];
+  let idx = 0;
+
+  function show(){
+    const d = data[idx % data.length]; idx++;
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.innerHTML = `<span class="t-ico">${d.i}</span><div class="t-body"><div class="t-name">${d.n}</div><div class="t-loc">${d.l}</div></div><span class="t-time">${d.t}m ago</span>`;
+    wrap.appendChild(el);
+    void el.offsetWidth;
+    el.classList.add('show');
+    setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(), 600); }, 4500);
+  }
+
+  setTimeout(()=>{ show(); setInterval(show, 8500); }, 4000);
+})();
+</script>
+</body>
+</html>
