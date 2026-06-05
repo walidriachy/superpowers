@@ -7,10 +7,9 @@ import { useCart } from '@/lib/cart-context';
 import { getProductByHandle, formatMoney } from '@/lib/shopify';
 import type { ShopifyProduct, ShopifyVariant } from '@/lib/shopify';
 
-// Client component so we can handle variant selection + add-to-cart
 export default function ProductPage({ params }: { params: { handle: string } }) {
   const [product, setProduct] = useState<ShopifyProduct | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
   const [selectedVariant, setSelectedVariant] = useState<ShopifyVariant | null>(null);
@@ -22,19 +21,15 @@ export default function ProductPage({ params }: { params: { handle: string } }) 
     getProductByHandle(params.handle).then((p) => {
       setProduct(p);
       if (p) {
-        // Pre-select first option of each type
         const defaults: Record<string, string> = {};
-        p.options.forEach((opt) => {
-          defaults[opt.name] = opt.values[0];
-        });
+        p.options.forEach((opt) => { defaults[opt.name] = opt.values[0]; });
         setSelectedOptions(defaults);
         setSelectedVariant(p.variants.nodes[0] ?? null);
       }
-      setLoading(false);
+      setDataLoading(false);
     });
   }, [params.handle]);
 
-  // Update selected variant when options change
   useEffect(() => {
     if (!product) return;
     const match = product.variants.nodes.find((v) =>
@@ -44,27 +39,29 @@ export default function ProductPage({ params }: { params: { handle: string } }) 
   }, [selectedOptions, product]);
 
   const handleAddToCart = async () => {
-    if (!selectedVariant) return;
+    if (!selectedVariant?.availableForSale) return;
     setAdding(true);
     await addItem(selectedVariant.id);
     setAdding(false);
     setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
+    setTimeout(() => setAdded(false), 2500);
   };
 
-  if (loading) {
+  const waNum = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '97100000000';
+
+  if (dataLoading) {
     return (
       <>
-        <div style={{ height: 64 }} aria-hidden />
-        <div className="container" style={{ padding: '40px clamp(16px,4vw,48px)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48 }}>
-            <div className="skeleton" style={{ aspectRatio: '1', borderRadius: 10 }} />
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div className="skeleton" style={{ height: 24, width: '40%' }} />
-              <div className="skeleton" style={{ height: 36, width: '80%' }} />
-              <div className="skeleton" style={{ height: 20, width: '30%' }} />
-              <div className="skeleton" style={{ height: 100 }} />
-              <div className="skeleton" style={{ height: 48, borderRadius: 8 }} />
+        <div style={{ height: '70px' }} aria-hidden="true" />
+        <div className="container" style={{ padding: 'clamp(2rem,5vw,5rem) var(--sx)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem' }}>
+            <div className="skeleton" style={{ aspectRatio: '1', borderRadius: 2 }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+              <div className="skeleton" style={{ height: 14, width: '35%' }} />
+              <div className="skeleton" style={{ height: 52, width: '85%' }} />
+              <div className="skeleton" style={{ height: 36, width: '28%' }} />
+              <div className="skeleton" style={{ height: 120 }} />
+              <div className="skeleton" style={{ height: 56 }} />
             </div>
           </div>
         </div>
@@ -75,10 +72,14 @@ export default function ProductPage({ params }: { params: { handle: string } }) 
   if (!product) {
     return (
       <>
-        <div style={{ height: 64 }} aria-hidden />
-        <div className="container" style={{ padding: '80px clamp(16px,4vw,48px)', textAlign: 'center' }}>
-          <p style={{ color: 'rgba(255,255,255,.4)', fontSize: 14 }}>Product not found.</p>
-          <Link href="/products" className="btn btn-ghost" style={{ marginTop: 20 }}>
+        <div className="page-hero">
+          <div className="page-hero__inner container">
+            <p className="page-hero__tag">Error</p>
+            <h1 className="page-hero__title">Product Not Found</h1>
+          </div>
+        </div>
+        <div className="container" style={{ padding: 'clamp(3rem,6vw,6rem) var(--sx)', textAlign: 'center' }}>
+          <Link href="/products" className="btn-ghost" style={{ display: 'inline-flex' }}>
             ← Back to Products
           </Link>
         </div>
@@ -94,75 +95,50 @@ export default function ProductPage({ params }: { params: { handle: string } }) 
 
   return (
     <>
-      <div style={{ height: 64 }} aria-hidden />
+      <div style={{ height: '70px' }} aria-hidden="true" />
 
-      <div className="container" style={{ padding: 'clamp(32px,5vw,60px) clamp(16px,4vw,48px)' }}>
+      <div className="container" style={{ padding: 'clamp(2.5rem,5vw,5rem) var(--sx) clamp(4rem,8vw,8rem)' }}>
         {/* Breadcrumb */}
-        <nav style={{ display: 'flex', gap: 8, fontSize: 12, color: 'rgba(255,255,255,.4)', marginBottom: 32, alignItems: 'center' }}>
-          <Link href="/" style={{ transition: 'color .2s' }}
-            onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,.4)')}
-          >Home</Link>
+        <nav className="breadcrumb">
+          <Link href="/">Home</Link>
           <span>/</span>
-          <Link href="/products" style={{ transition: 'color .2s' }}
-            onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,.4)')}
-          >Products</Link>
+          <Link href="/products">Products</Link>
           <span>/</span>
-          <span style={{ color: 'rgba(255,255,255,.7)' }}>{product.title}</span>
+          <span>{product.title}</span>
         </nav>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)',
-            gap: 'clamp(24px,5vw,64px)',
-          }}
-        >
-          {/* Images */}
+        {/* Main grid */}
+        <div className="pdp-grid">
+          {/* ── Image column ── */}
           <div>
-            <div
-              style={{
-                position: 'relative',
-                aspectRatio: '1',
-                borderRadius: 12,
-                overflow: 'hidden',
-                border: '1px solid rgba(255,255,255,.07)',
-                background: '#0f0f0f',
-                marginBottom: 12,
-              }}
-            >
+            <div className="pdp-main-img">
               {currentImage ? (
                 <Image
                   src={currentImage.url}
                   alt={currentImage.altText ?? product.title}
                   fill
                   style={{ objectFit: 'cover' }}
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 768px) 100vw, 55vw"
                   priority
                 />
               ) : (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', fontSize: 48, opacity: .2 }}>🚗</div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--gray-600)' }}>
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+                    <rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                    <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                  </svg>
+                </div>
               )}
+              <div aria-hidden="true" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 60%, rgba(4,4,4,.35))', pointerEvents: 'none' }} />
             </div>
 
-            {/* Thumbnails */}
             {images.length > 1 && (
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <div className="pdp-thumbs">
                 {images.map((img, i) => (
                   <button
                     key={i}
+                    className={`pdp-thumb${i === activeImage ? ' active' : ''}`}
                     onClick={() => setActiveImage(i)}
-                    style={{
-                      width: 64, height: 64,
-                      borderRadius: 6,
-                      overflow: 'hidden',
-                      border: `2px solid ${i === activeImage ? 'var(--red)' : 'rgba(255,255,255,.08)'}`,
-                      position: 'relative',
-                      flex: 'none',
-                      background: '#111',
-                      transition: 'border-color .2s',
-                    }}
                     aria-label={`View image ${i + 1}`}
                   >
                     <Image
@@ -170,7 +146,7 @@ export default function ProductPage({ params }: { params: { handle: string } }) 
                       alt={img.altText ?? `${product.title} ${i + 1}`}
                       fill
                       style={{ objectFit: 'cover' }}
-                      sizes="64px"
+                      sizes="80px"
                     />
                   </button>
                 ))}
@@ -178,124 +154,85 @@ export default function ProductPage({ params }: { params: { handle: string } }) 
             )}
           </div>
 
-          {/* Details */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* ── Details column ── */}
+          <div className="pdp-details">
             {product.vendor && (
-              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--red)' }}>
-                {product.vendor}
-              </p>
+              <p className="pdp-vendor">{product.vendor}</p>
             )}
 
-            <h1
-              style={{
-                fontSize: 'clamp(20px,3vw,32px)',
-                fontWeight: 900,
-                letterSpacing: '-.03em',
-                lineHeight: 1.15,
-              }}
-            >
-              {product.title}
-            </h1>
+            <h1 className="pdp-title">{product.title}</h1>
 
             {/* Price */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ fontSize: 26, fontWeight: 900, letterSpacing: '-.02em' }}>
-                {formatMoney(price)}
-              </span>
+            <div className="pdp-price-row">
+              <span className="pdp-price">{formatMoney(price)}</span>
               {isSale && compareAt && (
                 <>
-                  <span style={{ fontSize: 16, color: 'rgba(255,255,255,.35)', textDecoration: 'line-through' }}>
-                    {formatMoney(compareAt)}
-                  </span>
-                  <span className="badge badge--sale">SALE</span>
+                  <span className="pdp-compare">{formatMoney(compareAt)}</span>
+                  <span className="pdp-sale-badge">Sale</span>
                 </>
               )}
             </div>
 
             {/* Variant selectors */}
             {product.options
-              .filter((opt) => opt.values.length > 1 || opt.name !== 'Title')
+              .filter((opt) => !(opt.values.length === 1 && opt.name === 'Title'))
               .map((opt) => (
-                <div key={opt.name}>
-                  <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 10, color: 'rgba(255,255,255,.6)' }}>
+                <div key={opt.name} className="pdp-option">
+                  <p className="pdp-option__label">
                     {opt.name}:{' '}
-                    <span style={{ color: '#fff', fontWeight: 600, textTransform: 'none', letterSpacing: 0 }}>
-                      {selectedOptions[opt.name]}
-                    </span>
+                    <span className="pdp-option__value">{selectedOptions[opt.name]}</span>
                   </p>
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                    {opt.values.map((val) => {
-                      const isSelected = selectedOptions[opt.name] === val;
-                      return (
-                        <button
-                          key={val}
-                          onClick={() => setSelectedOptions((prev) => ({ ...prev, [opt.name]: val }))}
-                          style={{
-                            padding: '7px 14px',
-                            borderRadius: 6,
-                            fontSize: 13,
-                            fontWeight: 600,
-                            border: `1px solid ${isSelected ? 'rgba(204,0,0,.8)' : 'rgba(255,255,255,.12)'}`,
-                            background: isSelected ? 'rgba(204,0,0,.12)' : 'rgba(255,255,255,.03)',
-                            color: isSelected ? '#fff' : 'rgba(255,255,255,.6)',
-                            transition: 'all .15s',
-                            cursor: 'pointer',
-                          }}
-                        >
-                          {val}
-                        </button>
-                      );
-                    })}
+                  <div className="variant-opts">
+                    {opt.values.map((val) => (
+                      <button
+                        key={val}
+                        className={`variant-btn${selectedOptions[opt.name] === val ? ' active' : ''}`}
+                        onClick={() => setSelectedOptions((prev) => ({ ...prev, [opt.name]: val }))}
+                      >
+                        {val}
+                      </button>
+                    ))}
                   </div>
                 </div>
               ))}
 
-            {/* Availability */}
+            {/* Stock status */}
             {selectedVariant && !selectedVariant.availableForSale && (
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,.4)', fontWeight: 600 }}>
-                This variant is currently out of stock
-              </p>
+              <p className="pdp-out-of-stock">This variant is currently out of stock</p>
             )}
 
             {/* Add to cart */}
             <button
               onClick={handleAddToCart}
               disabled={adding || !selectedVariant?.availableForSale}
-              className="btn btn-primary"
-              style={{
-                width: '100%',
-                justifyContent: 'center',
-                padding: '16px',
-                fontSize: 15,
-                opacity: (!selectedVariant?.availableForSale) ? .4 : 1,
-                cursor: (!selectedVariant?.availableForSale) ? 'not-allowed' : 'pointer',
-                background: added ? '#22c55e' : 'var(--red)',
-                borderColor: added ? '#22c55e' : 'var(--red)',
-                transition: 'background .3s, border-color .3s',
-              }}
+              className={`btn-red pdp-atc${added ? ' added' : ''}${(!selectedVariant?.availableForSale) ? ' disabled' : ''}`}
+              style={{ width: '100%', justifyContent: 'center', fontSize: '.88rem' }}
             >
-              {adding ? 'Adding...' : added ? '✓ Added to Cart' : selectedVariant?.availableForSale === false ? 'Out of Stock' : 'Add to Cart'}
+              <span>
+                {adding ? 'Adding…' : added ? '✓ Added to Cart' : !selectedVariant?.availableForSale ? 'Out of Stock' : 'Add to Cart'}
+              </span>
             </button>
 
-            {/* WhatsApp */}
+            {/* WhatsApp CTA */}
             <a
-              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '97100000000'}?text=Hi%2C%20I%27m%20interested%20in%20the%20${encodeURIComponent(product.title)}`}
+              href={`https://wa.me/${waNum}?text=${encodeURIComponent(`Hi, I'm interested in: ${product.title}`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-ghost"
-              style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: 14 }}
+              className="btn-ghost pdp-wa"
+              style={{ width: '100%', justifyContent: 'center' }}
             >
-              💬 Ask on WhatsApp
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              Ask on WhatsApp
             </a>
 
             {/* Description */}
             {product.descriptionHtml && (
-              <div>
-                <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,.4)', marginBottom: 12 }}>
-                  Description
-                </p>
+              <div className="pdp-desc">
+                <p className="pdp-desc__label">Description</p>
                 <div
-                  style={{ fontSize: 14, color: 'rgba(255,255,255,.6)', lineHeight: 1.7 }}
+                  className="pdp-desc__body"
                   dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
                 />
               </div>
@@ -303,37 +240,15 @@ export default function ProductPage({ params }: { params: { handle: string } }) 
 
             {/* Tags */}
             {product.tags.length > 0 && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              <div className="pdp-tags">
                 {product.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    style={{
-                      padding: '3px 10px',
-                      borderRadius: 4,
-                      fontSize: 11,
-                      fontWeight: 600,
-                      letterSpacing: '.04em',
-                      background: 'rgba(255,255,255,.04)',
-                      border: '1px solid rgba(255,255,255,.08)',
-                      color: 'rgba(255,255,255,.4)',
-                    }}
-                  >
-                    {tag}
-                  </span>
+                  <span key={tag} className="pdp-tag">{tag}</span>
                 ))}
               </div>
             )}
           </div>
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          div[style*="grid-template-columns: minmax(0,1fr) minmax(0,1fr)"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </>
   );
 }

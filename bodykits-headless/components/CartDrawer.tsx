@@ -7,20 +7,20 @@ import { formatMoney } from '@/lib/shopify';
 
 export default function CartDrawer() {
   const { cart, cartOpen, setCartOpen, updateItem, removeItem, loading } = useCart();
-
   const lines = cart?.lines.nodes ?? [];
 
   return (
     <>
       <div
-        className={`cart-overlay ${cartOpen ? 'open' : ''}`}
+        className={`cart-overlay${cartOpen ? ' open' : ''}`}
         onClick={() => setCartOpen(false)}
-        aria-hidden
+        aria-hidden="true"
       />
-      <aside className={`cart-drawer ${cartOpen ? 'open' : ''}`} aria-label="Shopping cart">
+
+      <aside className={`cart-drawer${cartOpen ? ' open' : ''}`} aria-label="Shopping cart" role="dialog" aria-modal="true">
         <div className="cart-drawer__head">
           <span className="cart-drawer__title">
-            Cart {cart?.totalQuantity ? `(${cart.totalQuantity})` : ''}
+            Your Cart{cart?.totalQuantity ? ` (${cart.totalQuantity})` : ''}
           </span>
           <button
             className="cart-drawer__close"
@@ -34,43 +34,46 @@ export default function CartDrawer() {
         <div className="cart-drawer__body">
           {lines.length === 0 ? (
             <div className="cart-drawer__empty">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden="true">
                 <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
                 <line x1="3" y1="6" x2="21" y2="6"/>
                 <path d="M16 10a4 4 0 01-8 0"/>
               </svg>
               <p>Your cart is empty</p>
-              <button
-                className="btn btn-ghost"
-                style={{ fontSize: 13 }}
-                onClick={() => setCartOpen(false)}
-              >
+              <button className="btn-ghost" onClick={() => setCartOpen(false)}>
                 Continue Shopping
               </button>
             </div>
           ) : (
             lines.map((line) => {
               const { product } = line.merchandise;
-              const variant = line.merchandise.title !== 'Default Title' ? line.merchandise.title : null;
+              const variantTitle = line.merchandise.title !== 'Default Title' ? line.merchandise.title : null;
               return (
                 <div key={line.id} className="cart-item">
-                  {product.featuredImage ? (
-                    <Image
-                      src={product.featuredImage.url}
-                      alt={product.featuredImage.altText ?? product.title}
-                      width={72}
-                      height={72}
-                      className="cart-item__img"
-                    />
-                  ) : (
-                    <div className="cart-item__img" style={{ background: '#1a1a1a' }} />
-                  )}
+                  <div className="cart-item__img-wrap">
+                    {product.featuredImage ? (
+                      <Image
+                        src={product.featuredImage.url}
+                        alt={product.featuredImage.altText ?? product.title}
+                        width={80}
+                        height={80}
+                        className="cart-item__img"
+                        style={{ objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <div className="cart-item__img" style={{ background: 'var(--carbon)' }} />
+                    )}
+                  </div>
 
-                  <div>
-                    <Link href={`/products/${product.handle}`} onClick={() => setCartOpen(false)}>
+                  <div className="cart-item__info">
+                    <Link
+                      href={`/products/${product.handle}`}
+                      onClick={() => setCartOpen(false)}
+                    >
                       <p className="cart-item__title">{product.title}</p>
                     </Link>
-                    {variant && <p className="cart-item__variant">{variant}</p>}
+                    {variantTitle && <p className="cart-item__variant">{variantTitle}</p>}
+
                     <div className="cart-item__qty">
                       <button
                         className="cart-item__qty-btn"
@@ -90,6 +93,7 @@ export default function CartDrawer() {
                         +
                       </button>
                     </div>
+
                     <button
                       className="cart-item__remove"
                       onClick={() => removeItem(line.id)}
@@ -111,19 +115,13 @@ export default function CartDrawer() {
         {lines.length > 0 && cart && (
           <div className="cart-drawer__foot">
             <div className="cart-drawer__total">
-              <span>Subtotal</span>
-              <span>{formatMoney(cart.cost.subtotalAmount)}</span>
+              <span className="cart-drawer__total-label">Subtotal</span>
+              <span className="cart-drawer__total-amount">{formatMoney(cart.cost.subtotalAmount)}</span>
             </div>
-            <a
-              href={cart.checkoutUrl}
-              className="cart-drawer__checkout"
-              rel="noopener"
-            >
-              Proceed to Checkout →
+            <a href={cart.checkoutUrl} className="cart-drawer__checkout" rel="noopener">
+              <span>Proceed to Checkout →</span>
             </a>
-            <p style={{ fontSize: 11, color: 'var(--text-dim)', textAlign: 'center', marginTop: 10 }}>
-              Taxes and shipping calculated at checkout
-            </p>
+            <p className="cart-drawer__note">Taxes &amp; shipping calculated at checkout</p>
           </div>
         )}
       </aside>

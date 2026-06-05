@@ -11,159 +11,74 @@ export default function Navbar() {
   const qty = cart?.totalQuantity ?? 0;
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  const waNum = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '97100000000';
+
   return (
-    <header
-      style={{
-        position: 'fixed',
-        top: 0, left: 0, right: 0,
-        zIndex: 100,
-        height: 64,
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 clamp(16px,4vw,48px)',
-        background: scrolled
-          ? 'rgba(10,10,10,.92)'
-          : 'linear-gradient(to bottom, rgba(0,0,0,.7), transparent)',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(255,255,255,.06)' : 'none',
-        transition: 'background .4s, backdrop-filter .4s, border-color .4s',
-      }}
-    >
-      {/* Logo */}
-      <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, marginRight: 'auto' }}>
-        <span
-          style={{
-            display: 'inline-block',
-            width: 32, height: 32,
-            background: 'var(--red)',
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-          }}
-        />
-        <span style={{ fontSize: 17, fontWeight: 900, letterSpacing: '-.02em' }}>
-          BODY<span style={{ color: 'var(--red)' }}>KITS</span>
-        </span>
-      </Link>
-
-      {/* Desktop nav */}
-      <nav style={{ display: 'flex', gap: 4, marginRight: 24 }} className="desktop-nav">
-        {[
-          { label: 'Shop', href: '/products' },
-          { label: 'Collections', href: '/collections' },
-        ].map(({ label, href }) => (
-          <Link
-            key={href}
-            href={href}
-            style={{
-              padding: '6px 14px',
-              borderRadius: 6,
-              fontSize: 13,
-              fontWeight: 600,
-              color: 'rgba(255,255,255,.75)',
-              letterSpacing: '.02em',
-              transition: 'color .2s, background .2s',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = '#fff';
-              (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,.06)';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,.75)';
-              (e.currentTarget as HTMLElement).style.background = 'transparent';
-            }}
-          >
-            {label}
-          </Link>
-        ))}
-      </nav>
-
-      {/* Cart button */}
-      <button
-        onClick={() => setCartOpen(true)}
-        aria-label={`Open cart, ${qty} items`}
-        style={{
-          position: 'relative',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 40, height: 40,
-          borderRadius: 8,
-          border: '1px solid rgba(255,255,255,.1)',
-          background: 'rgba(255,255,255,.04)',
-          transition: 'all .2s',
-          fontSize: 18,
-        }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLElement).style.borderColor = 'rgba(204,0,0,.5)';
-          (e.currentTarget as HTMLElement).style.background = 'rgba(204,0,0,.1)';
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,.1)';
-          (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,.04)';
-        }}
-      >
-        🛒
-        {qty > 0 && (
-          <span
-            style={{
-              position: 'absolute',
-              top: -6, right: -6,
-              minWidth: 18, height: 18,
-              background: 'var(--red)',
-              borderRadius: 9,
-              fontSize: 10,
-              fontWeight: 800,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '0 4px',
-              border: '2px solid var(--bg)',
-            }}
-          >
-            {qty > 99 ? '99+' : qty}
+    <>
+      <header className={`site-nav${scrolled ? ' scrolled' : ''}`}>
+        <Link href="/" className="nav-logo" aria-label="Bodykits.ae home">
+          <span className="nav-logo__hex" aria-hidden="true" />
+          <span className="nav-logo__text">
+            BODY<em>KITS</em><span className="nav-logo__tld">.AE</span>
           </span>
-        )}
-      </button>
+        </Link>
 
-      {/* WhatsApp */}
-      <a
-        href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '97100000000'}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Contact on WhatsApp"
-        style={{
-          marginLeft: 10,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 40, height: 40,
-          borderRadius: 8,
-          border: '1px solid rgba(37,211,102,.25)',
-          background: 'rgba(37,211,102,.06)',
-          fontSize: 18,
-          transition: 'all .2s',
-        }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,211,102,.6)';
-          (e.currentTarget as HTMLElement).style.background = 'rgba(37,211,102,.12)';
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLElement).style.borderColor = 'rgba(37,211,102,.25)';
-          (e.currentTarget as HTMLElement).style.background = 'rgba(37,211,102,.06)';
-        }}
-      >
-        💬
-      </a>
+        <nav className="nav-links" aria-label="Main navigation">
+          <Link href="/products" className="nav-link">Shop</Link>
+          <Link href="/collections" className="nav-link">Collections</Link>
+          <a href={`https://wa.me/${waNum}`} className="nav-link" target="_blank" rel="noopener noreferrer">Contact</a>
+        </nav>
 
-      <style>{`
-        @media (max-width: 640px) {
-          .desktop-nav { display: none !important; }
-        }
-      `}</style>
-    </header>
+        <div className="nav-actions">
+          <button
+            className="nav-cart"
+            onClick={() => setCartOpen(true)}
+            aria-label={`Open cart, ${qty} items`}
+          >
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+            {qty > 0 && <span className="nav-cart__badge">{qty > 99 ? '99+' : qty}</span>}
+          </button>
+
+          <Link href="/products" className="nav-cta">
+            <span>Shop Now</span>
+          </Link>
+
+          <button
+            className={`nav-burger${mobileOpen ? ' open' : ''}`}
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
+          >
+            <span /><span /><span />
+          </button>
+        </div>
+      </header>
+
+      <div className={`nav-mobile${mobileOpen ? ' open' : ''}`} aria-hidden={!mobileOpen}>
+        <Link href="/products" className="nav-mobile__link" onClick={() => setMobileOpen(false)}>Shop</Link>
+        <Link href="/collections" className="nav-mobile__link" onClick={() => setMobileOpen(false)}>Collections</Link>
+        <a href={`https://wa.me/${waNum}`} className="nav-mobile__link" target="_blank" rel="noopener noreferrer" onClick={() => setMobileOpen(false)}>Contact</a>
+        <button
+          className="btn-red nav-mobile__cart"
+          onClick={() => { setCartOpen(true); setMobileOpen(false); }}
+        >
+          <span>View Cart{qty > 0 ? ` (${qty})` : ''}</span>
+        </button>
+      </div>
+      <div
+        className={`nav-mobile__overlay${mobileOpen ? ' open' : ''}`}
+        onClick={() => setMobileOpen(false)}
+        aria-hidden="true"
+      />
+    </>
   );
 }

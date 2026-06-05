@@ -1,15 +1,10 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import '@/styles/globals.css';
 import { CartProvider } from '@/lib/cart-context';
 import Navbar from '@/components/Navbar';
 import CartDrawer from '@/components/CartDrawer';
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
+import ShopFooter from '@/components/ShopFooter';
+import ScrollFX from '@/components/ScrollFX';
 
 export const metadata: Metadata = {
   title: {
@@ -17,7 +12,7 @@ export const metadata: Metadata = {
     template: '%s | Bodykits.ae',
   },
   description:
-    'Shop the finest aerodynamic body kits, splitters, diffusers, and widebody conversions for exotic and performance vehicles. UAE\'s #1 automotive styling destination.',
+    "Shop the finest aerodynamic body kits, splitters, diffusers, and widebody conversions for exotic and performance vehicles. UAE's #1 automotive styling destination.",
   keywords: ['body kits', 'UAE', 'Dubai', 'aerodynamics', 'performance parts', 'widebody'],
   openGraph: {
     type: 'website',
@@ -35,11 +30,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       </head>
-      <body className={inter.variable}>
+      <body>
         <CartProvider>
+          <ScrollFX />
           <Navbar />
           <CartDrawer />
           <main>{children}</main>
+          <ShopFooter />
         </CartProvider>
       </body>
     </html>

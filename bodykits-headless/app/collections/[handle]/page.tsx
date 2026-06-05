@@ -6,11 +6,7 @@ import Image from 'next/image';
 
 export const revalidate = 60;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { handle: string };
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { handle: string } }): Promise<Metadata> {
   const col = await getCollectionByHandle(params.handle, 1);
   if (!col) return { title: 'Collection Not Found' };
   return {
@@ -31,10 +27,17 @@ export default async function CollectionPage({
   if (!collection) {
     return (
       <>
-        <div style={{ height: 64 }} aria-hidden />
-        <div className="container" style={{ padding: '80px clamp(16px,4vw,48px)', textAlign: 'center' }}>
-          <p style={{ color: 'rgba(255,255,255,.4)' }}>Collection not found.</p>
-          <Link href="/collections" className="btn btn-ghost" style={{ marginTop: 20 }}>
+        <div className="page-hero">
+          <div className="page-hero__inner container">
+            <p className="page-hero__tag">Error</p>
+            <h1 className="page-hero__title">Not Found</h1>
+          </div>
+        </div>
+        <div className="container" style={{ padding: 'clamp(3rem,6vw,6rem) var(--sx)', textAlign: 'center' }}>
+          <p style={{ color: 'var(--gray-600)', fontFamily: 'var(--ff-a)', letterSpacing: '.16em', textTransform: 'uppercase', fontSize: '.78rem' }}>
+            Collection not found
+          </p>
+          <Link href="/collections" className="btn-ghost" style={{ marginTop: '1.5rem', display: 'inline-flex' }}>
             ← All Collections
           </Link>
         </div>
@@ -46,78 +49,43 @@ export default async function CollectionPage({
 
   return (
     <>
-      <div style={{ height: 64 }} aria-hidden />
-
-      {/* Collection hero */}
-      <div
-        style={{
-          position: 'relative',
-          padding: 'clamp(48px,8vw,96px) clamp(16px,4vw,48px)',
-          textAlign: 'center',
-          overflow: 'hidden',
-        }}
-      >
+      {/* Hero */}
+      <div className="page-hero" style={{ textAlign: 'center' }}>
         {collection.image && (
           <Image
             src={collection.image.url}
             alt={collection.image.altText ?? collection.title}
             fill
-            style={{ objectFit: 'cover', opacity: .18 }}
+            style={{ objectFit: 'cover', opacity: .12, zIndex: 0 }}
             sizes="100vw"
             priority
           />
         )}
-        <div
-          aria-hidden
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(to bottom, transparent, var(--bg))',
-            zIndex: 0,
-          }}
-        />
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <nav style={{ display: 'flex', gap: 8, fontSize: 12, color: 'rgba(255,255,255,.35)', marginBottom: 24, justifyContent: 'center', alignItems: 'center' }}>
+        <div className="page-hero__inner container">
+          <nav className="breadcrumb" style={{ justifyContent: 'center' }}>
             <Link href="/">Home</Link>
             <span>/</span>
             <Link href="/collections">Collections</Link>
             <span>/</span>
-            <span style={{ color: 'rgba(255,255,255,.65)' }}>{collection.title}</span>
+            <span>{collection.title}</span>
           </nav>
-          <h1
-            style={{
-              fontSize: 'clamp(24px,5vw,52px)',
-              fontWeight: 900,
-              letterSpacing: '-.04em',
-              lineHeight: 1.05,
-            }}
-          >
-            {collection.title}
-          </h1>
+          <p className="page-hero__tag">Collection</p>
+          <h1 className="page-hero__title">{collection.title}</h1>
           {collection.description && (
-            <p
-              style={{
-                marginTop: 16,
-                fontSize: 15,
-                color: 'rgba(255,255,255,.5)',
-                maxWidth: 480,
-                margin: '16px auto 0',
-                lineHeight: 1.6,
-              }}
-            >
+            <p className="page-hero__sub" style={{ margin: '1rem auto 0', textAlign: 'center' }}>
               {collection.description}
             </p>
           )}
-          <p style={{ marginTop: 12, fontSize: 12, color: 'rgba(255,255,255,.3)' }}>
-            {products.length} product{products.length !== 1 ? 's' : ''}
+          <p style={{ marginTop: '.8rem', fontFamily: 'var(--ff-a)', fontSize: '.62rem', letterSpacing: '.28em', textTransform: 'uppercase', color: 'var(--gray-600)' }}>
+            {products.length} Product{products.length !== 1 ? 's' : ''}
           </p>
         </div>
       </div>
 
-      <div className="container" style={{ padding: '0 clamp(16px,4vw,48px) clamp(48px,6vw,80px)' }}>
+      <section className="container" style={{ padding: '0 var(--sx) clamp(5rem,10vw,10rem)' }}>
         {products.length === 0 ? (
-          <div style={{ padding: '80px 0', textAlign: 'center', color: 'rgba(255,255,255,.3)', fontSize: 14 }}>
-            No products in this collection yet.
+          <div style={{ padding: '5rem 0', textAlign: 'center', color: 'var(--gray-600)', fontFamily: 'var(--ff-a)', letterSpacing: '.2em', textTransform: 'uppercase', fontSize: '.8rem' }}>
+            No products in this collection yet
           </div>
         ) : (
           <div className="products-grid">
@@ -128,16 +96,13 @@ export default async function CollectionPage({
         )}
 
         {pageInfo.hasNextPage && (
-          <div style={{ textAlign: 'center', marginTop: 48 }}>
-            <Link
-              href={`/collections/${params.handle}?after=${pageInfo.endCursor}`}
-              className="btn btn-ghost"
-            >
+          <div className="pagination">
+            <Link href={`/collections/${params.handle}?after=${pageInfo.endCursor}`} className="btn-ghost">
               Load More →
             </Link>
           </div>
         )}
-      </div>
+      </section>
     </>
   );
 }

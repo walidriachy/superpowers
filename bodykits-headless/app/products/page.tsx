@@ -6,8 +6,8 @@ import Link from 'next/link';
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: 'All Products',
-  description: 'Browse our full range of premium automotive body kits, splitters, diffusers and aerodynamic styling parts.',
+  title: 'Shop All Products',
+  description: 'Browse our full range of premium automotive body kits, splitters, diffusers and aerodynamic styling parts for exotic vehicles.',
 };
 
 export default async function ProductsPage({
@@ -19,41 +19,28 @@ export default async function ProductsPage({
 
   return (
     <>
-      <div style={{ height: 64 }} aria-hidden />
-
-      <div className="container" style={{ padding: 'clamp(32px,5vw,64px) clamp(16px,4vw,48px)' }}>
-        <div className="page-hero" style={{ textAlign: 'left', padding: '0 0 40px' }}>
-          <span className="badge badge--red" style={{ marginBottom: 12, display: 'inline-flex' }}>
-            Shop
-          </span>
-          <h1
-            style={{
-              fontSize: 'clamp(24px,4vw,44px)',
-              fontWeight: 900,
-              letterSpacing: '-.03em',
-            }}
-          >
-            All Products
+      <div className="page-hero">
+        <div className="page-hero__inner container">
+          <p className="page-hero__tag">Catalog</p>
+          <h1 className="page-hero__title">
+            All <span className="r">Products</span>
           </h1>
-          <p style={{ marginTop: 8, color: 'rgba(255,255,255,.5)', fontSize: 14 }}>
-            {products.length === 0 ? 'Loading...' : `${products.length}+ products available`}
+          <p className="page-hero__sub">
+            {products.length > 0
+              ? `${products.length}+ premium aerodynamic parts available`
+              : 'Premium aerodynamic parts for exotic & performance vehicles'}
           </p>
         </div>
+      </div>
 
+      <section className="container" style={{ padding: '0 var(--sx) clamp(5rem,10vw,10rem)' }}>
         {products.length === 0 ? (
-          <div
-            style={{
-              padding: '80px 0',
-              textAlign: 'center',
-              color: 'rgba(255,255,255,.3)',
-              fontSize: 14,
-              lineHeight: 2,
-            }}
-          >
-            <p>No products found.</p>
-            <p style={{ fontSize: 12, marginTop: 8 }}>
-              Check that <code>unauthenticated_read_product_listings</code> is enabled
-              in Shopify Admin → Apps → Headless → Storefront API permissions.
+          <div style={{ padding: '5rem 0', textAlign: 'center', color: 'var(--gray-600)' }}>
+            <p style={{ fontFamily: 'var(--ff-a)', letterSpacing: '.2em', textTransform: 'uppercase', fontSize: '.8rem' }}>
+              No products found
+            </p>
+            <p style={{ fontSize: '.75rem', marginTop: '.8rem', color: 'var(--gray-600)' }}>
+              Check Shopify Admin → Apps → Headless → Storefront API permissions
             </p>
           </div>
         ) : (
@@ -64,18 +51,14 @@ export default async function ProductsPage({
           </div>
         )}
 
-        {/* Pagination */}
         {pageInfo.hasNextPage && (
-          <div style={{ textAlign: 'center', marginTop: 48 }}>
-            <Link
-              href={`/products?after=${pageInfo.endCursor}`}
-              className="btn btn-ghost"
-            >
+          <div className="pagination">
+            <Link href={`/products?after=${pageInfo.endCursor}`} className="btn-ghost">
               Load More Products →
             </Link>
           </div>
         )}
-      </div>
+      </section>
     </>
   );
 }
