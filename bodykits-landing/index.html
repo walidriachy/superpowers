@@ -362,14 +362,17 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:4.5rem
 .mega-tabs{display:flex;gap:.45rem;margin-bottom:1.6rem;flex-wrap:wrap;position:relative;z-index:2}
 .mt{
   font-family:var(--ff-a);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--gray-600);background:none;border:1px solid rgba(255,255,255,.08);
-  padding:.36rem .85rem;cursor:pointer;
-  transition:color .22s,border-color .22s,background .22s;
+  color:rgba(255,255,255,.65);background:none;border:1px solid rgba(255,255,255,.24);
+  padding:.38rem .95rem;cursor:pointer;
+  transition:color .22s,border-color .22s,background .22s,box-shadow .22s;
 }
-.mt:hover{color:#fff;border-color:rgba(255,255,255,.2)}
-.mt.active{color:#fff;border-color:rgba(204,0,0,.55);background:rgba(204,0,0,.07)}
-.mt sup{font-size:.44rem;color:var(--gray-600);margin-left:.3rem;vertical-align:super}
-.mt.active sup{color:rgba(204,0,0,.6)}
+.mt:hover{color:#fff;border-color:rgba(255,255,255,.48);background:rgba(255,255,255,.05)}
+.mt.active{
+  color:#fff;border-color:rgba(204,0,0,.9);background:rgba(204,0,0,.13);
+  box-shadow:0 0 18px rgba(204,0,0,.14) inset,0 0 0 1px rgba(204,0,0,.28);
+}
+.mt sup{font-size:.44rem;color:rgba(255,255,255,.38);margin-left:.3rem;vertical-align:super}
+.mt.active sup{color:rgba(204,0,0,.85)}
 
 /* Search bar */
 .mega-search{
@@ -460,9 +463,94 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:4.5rem
 @media(max-width:1200px){.brand-g{grid-template-columns:repeat(5,1fr)}}
 @media(max-width:900px){.brand-g{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:768px){.mega{display:none}}
+
+/* ── @property animated gradient ── */
+@property --gp{syntax:'<percentage>';initial-value:0%;inherits:false}
+
+/* ── CUSTOM SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:var(--red);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:var(--red-hi)}
+
+/* ── SCROLL PROGRESS BAR ── */
+#spb{
+  position:fixed;top:0;left:0;width:0%;height:2px;z-index:10003;
+  background:linear-gradient(90deg,var(--red),var(--red-hi),rgba(255,100,100,.5));
+  pointer-events:none;
+  box-shadow:0 0 10px rgba(204,0,0,.75),0 0 22px rgba(204,0,0,.28);
+  transition:width .08s linear;
+}
+
+/* ── PARTICLE CLICK CANVAS ── */
+#pc{position:fixed;inset:0;pointer-events:none;z-index:9995}
+
+/* ── TOAST ── */
+#toast-wrap{position:fixed;bottom:1.8rem;left:1.8rem;z-index:9992;display:flex;flex-direction:column-reverse;gap:.7rem;pointer-events:none}
+.toast{
+  display:flex;align-items:center;gap:1rem;
+  background:rgba(7,7,7,.97);border:1px solid rgba(255,255,255,.06);
+  border-left:3px solid var(--red);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  padding:.95rem 1.3rem;max-width:310px;min-width:240px;
+  transform:translateX(-130%);opacity:0;
+  transition:transform .52s var(--ease-expo),opacity .3s;
+  pointer-events:none;
+}
+.toast.show{transform:translateX(0);opacity:1}
+.t-ico{font-size:1.3rem;flex-shrink:0;line-height:1}
+.t-body{flex:1;min-width:0}
+.t-name{font-family:var(--ff-a);font-size:.72rem;letter-spacing:.08em;color:#fff;margin-bottom:.18rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-loc{font-family:var(--ff-a);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gray-600)}
+.t-time{font-family:var(--ff-o);font-size:.48rem;letter-spacing:.1em;color:rgba(204,0,0,.6);flex-shrink:0;margin-left:.5rem}
+
+/* ── WHATSAPP CTA ── */
+#wa-btn{
+  position:fixed;bottom:2rem;right:2rem;z-index:9993;
+  width:56px;height:56px;border-radius:50%;
+  background:#25d366;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(37,211,102,.32);
+  transition:transform .38s var(--ease-expo),box-shadow .38s;
+}
+#wa-btn:hover{transform:translateY(-5px) scale(1.1);box-shadow:0 8px 32px rgba(37,211,102,.55)}
+#wa-btn svg{width:27px;height:27px;fill:#fff;position:relative;z-index:1}
+.wa-r{position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(37,211,102,.38);animation:waR 2.2s ease infinite}
+.wa-r2{position:absolute;inset:-18px;border-radius:50%;border:1px solid rgba(37,211,102,.18);animation:waR 2.2s ease .7s infinite}
+@keyframes waR{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.5);opacity:0}}
+
+/* ── IN-STOCK HERO BADGE ── */
+.stock-live{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-family:var(--ff-a);font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;
+  color:rgba(60,220,100,.9);margin-bottom:.9rem;
+  opacity:0;transform:translateY(8px);
+}
+.stock-live.in{opacity:1;transform:none;transition:opacity .8s ease,transform .8s ease}
+.sl-dot{width:7px;height:7px;border-radius:50%;background:#3cdc64;flex-shrink:0;position:relative}
+.sl-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(60,220,100,.45);animation:slP 1.9s ease infinite}
+@keyframes slP{0%{transform:scale(1);opacity:.75}100%{transform:scale(2.4);opacity:0}}
+
+/* ── MEGA FOOTER NOTE STYLES ── */
+.mega-foot-note{font-family:var(--ff-o);font-size:.52rem;letter-spacing:.15em;color:var(--gray-600)}
+.mf-n{color:rgba(204,0,0,.8)}
 </style>
 </head>
 <body>
+
+<!-- SCROLL PROGRESS BAR -->
+<div id="spb"></div>
+
+<!-- CLICK PARTICLE CANVAS -->
+<canvas id="pc"></canvas>
+
+<!-- TOAST NOTIFICATIONS -->
+<div id="toast-wrap"></div>
+
+<!-- WHATSAPP FLOATING CTA -->
+<a href="https://wa.me/97100000000" id="wa-btn" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <span class="wa-r"></span>
+  <span class="wa-r2"></span>
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"/></svg>
+</a>
 
 <!-- CURSOR -->
 <div id="c-dot"></div>
@@ -665,6 +753,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:4.5rem
 <section class="hero" id="hero">
   <div class="hero-left">
     <p class="hero-eye" id="h-eye">UAE's Premier Automotive Styling</p>
+    <div class="stock-live" id="h-stock"><span class="sl-dot"></span>500+ units in stock &mdash; Dubai warehouse</div>
     <h1 class="hero-title" aria-label="Redefine Your Machine">
       <span class="ln"><span id="hl1" class="glitch-wrap" data-text="REDEFINE">REDEFINE</span></span>
       <span class="ln"><span id="hl2" class="ghost">YOUR</span></span>
@@ -1313,6 +1402,7 @@ function startHero(){
   }
 
   show(document.getElementById('h-eye'), 80);
+  setTimeout(()=>document.getElementById('h-stock')?.classList.add('in'), 260);
   slide('hl1', 180);
   slide('hl2', 340);
   slide('hl3', 500);
@@ -1685,6 +1775,114 @@ window.addEventListener('scroll',()=>{
     }, 200);
   }
 },{passive:true});
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+============================================================ */
+(function(){
+  const b = document.getElementById('spb');
+  if(!b) return;
+  window.addEventListener('scroll',()=>{
+    const pct = scrollY / (document.documentElement.scrollHeight - innerHeight) * 100;
+    b.style.width = Math.min(100, pct) + '%';
+  },{passive:true});
+})();
+
+/* ============================================================
+   NAV LOGO 3D TILT
+============================================================ */
+(function(){
+  const logo = document.querySelector('.nav-logo');
+  const nav  = document.getElementById('main-nav');
+  if(!logo||!nav) return;
+  nav.addEventListener('mousemove',e=>{
+    const r  = logo.getBoundingClientRect();
+    const cx = r.left + r.width/2;
+    const cy = r.top  + r.height/2;
+    const dx = (e.clientX - cx) / (r.width  * .5);
+    const dy = (e.clientY - cy) / (r.height * .5);
+    logo.style.transition = 'transform .07s ease';
+    logo.style.transform  = `perspective(420px) rotateY(${dx*14}deg) rotateX(${-dy*8}deg) scale(1.06)`;
+  });
+  nav.addEventListener('mouseleave',()=>{
+    logo.style.transition = 'transform .7s var(--ease-expo)';
+    logo.style.transform  = '';
+  });
+})();
+
+/* ============================================================
+   CLICK PARTICLE BURST
+============================================================ */
+(function(){
+  const c = document.getElementById('pc');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  let W, H;
+  const resize = () => { W = c.width = innerWidth; H = c.height = innerHeight; };
+  resize();
+  window.addEventListener('resize', resize);
+
+  const E = [];
+  document.addEventListener('click', e=>{
+    for(let i=0;i<24;i++){
+      const a = (Math.PI*2*i/24) + (Math.random()-.5)*.9;
+      const s = 1.5 + Math.random()*6.5;
+      const col = Math.random()<.65 ? [204,0,0] : [255,80,0];
+      E.push({x:e.clientX,y:e.clientY,vx:Math.cos(a)*s,vy:Math.sin(a)*s-1.8,l:1,sz:1.5+Math.random()*3.5,c:col});
+    }
+  });
+
+  (function loop(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=E.length-1;i>=0;i--){
+      const p=E[i];
+      p.x+=p.vx; p.y+=p.vy; p.vy+=.22; p.vx*=.93; p.l-=.028;
+      if(p.l<=0){E.splice(i,1);continue}
+      ctx.save();
+      ctx.globalAlpha = p.l;
+      ctx.shadowColor  = `rgba(${p.c[0]},${p.c[1]},${p.c[2]},.9)`;
+      ctx.shadowBlur   = 10;
+      ctx.fillStyle    = `rgb(${p.c[0]},${p.c[1]},${p.c[2]})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.sz*p.l, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+    requestAnimationFrame(loop);
+  })();
+})();
+
+/* ============================================================
+   JUST-PURCHASED TOAST NOTIFICATIONS
+============================================================ */
+(function(){
+  const wrap = document.getElementById('toast-wrap');
+  if(!wrap) return;
+  const data = [
+    {i:'🏎️',n:'McLaren 720S Wide Body Kit',l:'Dubai, UAE',t:2},
+    {i:'🔥',n:'Carbon Fibre Front Bumper',l:'Abu Dhabi, UAE',t:5},
+    {i:'⚡',n:'Nissan GTR R35 Full Kit',l:'Dubai Marina, UAE',t:1},
+    {i:'💎',n:'Lamborghini Urus Aero Kit',l:'Palm Jumeirah, UAE',t:8},
+    {i:'🚀',n:'BMW M4 Competition Kit',l:'Sharjah, UAE',t:3},
+    {i:'⚙️',n:'Porsche 992 GT3 Body Kit',l:'Dubai, UAE',t:11},
+    {i:'🏁',n:'Toyota Supra Side Skirt Set',l:'Riyadh, KSA',t:6},
+    {i:'🛞',n:'Ferrari 488 Diffuser Set',l:'Dubai, UAE',t:4},
+  ];
+  let idx = 0;
+
+  function show(){
+    const d = data[idx % data.length]; idx++;
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.innerHTML = `<span class="t-ico">${d.i}</span><div class="t-body"><div class="t-name">${d.n}</div><div class="t-loc">${d.l}</div></div><span class="t-time">${d.t}m ago</span>`;
+    wrap.appendChild(el);
+    void el.offsetWidth;
+    el.classList.add('show');
+    setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(), 600); }, 4500);
+  }
+
+  setTimeout(()=>{ show(); setInterval(show, 8500); }, 4000);
+})();
 </script>
 </body>
 </html>
