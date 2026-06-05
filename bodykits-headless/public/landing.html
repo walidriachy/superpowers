@@ -1648,17 +1648,17 @@ function startHero(){
   slide('hl2', 340);
   slide('hl3', 500);
 
-  // Scramble REDEFINE
+  // Scramble REDEFINE — delayed until slide animation finishes (~1200ms)
   setTimeout(()=>{
     const el = document.getElementById('hl1');
     if(el) scrambleText(el, 900);
-  }, 380);
+  }, 1200);
 
   // Glitch REDEFINE after scramble
   setTimeout(()=>{
     const wrap = document.getElementById('hl1');
     if(wrap){ wrap.classList.add('glitching'); setTimeout(()=>wrap.classList.remove('glitching'),400); }
-  }, 1400);
+  }, 2200);
 
   show(document.getElementById('h-sub'),  720);
   show(document.getElementById('h-ctas'), 900);
